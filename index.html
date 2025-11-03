@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finverse - Development Roadmap & Investment Potential</title>
+    <title>All-in-one - Development Roadmap & Investment Potential</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,24 +15,57 @@
             font-family: 'Inter', sans-serif;
         }
 
+        /* Loại bỏ các rule gây lỗi bố cục và cắt nội dung */
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 1900px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 800px;
-            max-height: 500px;
+            max-width: 700px;
+            margin: 0 auto;
+            /* Căn giữa biểu đồ */
+            height: 400px;
+            /* Giảm chiều cao mặc định cho dễ xem */
         }
 
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 400px;
+        /* CSS cho hình ảnh: Đảm bảo hình ảnh không bị cắt, giữ tỷ lệ */
+        .content-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* Quan trọng: Đảm bảo hình ảnh được chứa trọn vẹn (contain) thay vì bị cover và cắt */
+            max-height: 400px;
+            /* Chiều cao tối đa hợp lý cho hình ảnh */
+        }
+
+        /* Loại bỏ các style cũ gây lỗi: height: 100vh; overflow: hidden; */
+        section {
+            padding-top: 4rem;
+            /* Tạo khoảng cách trên mỗi section */
+            padding-bottom: 4rem;
+            min-height: auto;
+            /* Bỏ quy tắc height: 100vh cũ */
+            margin-bottom: 0;
+        }
+
+        /* Sticky navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Cải thiện hiển thị trên di động */
+        @media (max-width: 1024px) {
+            .phase-content {
+                grid-template-columns: 1fr;
+                /* 1 cột trên di động */
             }
-        }
 
-        .timeline-card-content p {
-            margin-top: 8px;
+            .chart-container {
+                margin-top: 2rem;
+            }
         }
     </style>
 </head>
@@ -40,334 +73,551 @@
 <body class="bg-gray-50 text-gray-800">
     <div class="container mx-auto p-4 md:p-8">
 
-        <header class="text-center mb-12 md:mb-16">
-            <h1 class="text-4xl md:text-6xl font-black text-[#003f5c] tracking-tight">Finverse</h1>
+        <header class="text-center mb-16 md:mb-20">
+            <h1 class="text-5xl md:text-7xl font-black text-[#003f5c] tracking-tight">All-in-one</h1>
+            <p class="text-xl md:text-2xl text-gray-600 mt-4">Aquarium Design & Community Platform</p>
         </header>
 
-        <main>
-            <section id="roadmap" class="mb-16 md:mb-24">
-                <h2 class="text-3xl md:text-4xl font-bold text-center text-[#003f5c] mb-12">🗺️ Feature & Strategy
-                    Roadmap</h2>
-                <div class="relative wrap overflow-hidden p-10 h-full">
-                    <div class="border-2-2 absolute border-opacity-20 border-gray-700 h-full border" style="left: 50%">
-                    </div>
+        <nav class="sticky-nav rounded-xl mb-12 border-b border-gray-200">
+            <div class="container mx-auto px-4 py-3">
+                <ul class="flex flex-wrap justify-center gap-4 md:gap-8">
+                    <li><a href="#phase1"
+                            class="text-lg font-semibold text-[#d45087] hover:text-[#003f5c] transition-colors p-2 rounded-lg">Phase
+                            1</a></li>
+                    <li><a href="#phase2"
+                            class="text-lg font-semibold text-[#f95d6a] hover:text-[#003f5c] transition-colors p-2 rounded-lg">Phase
+                            2</a></li>
+                    <li><a href="#phase3"
+                            class="text-lg font-semibold text-[#ff7c43] hover:text-[#003f5c] transition-colors p-2 rounded-lg">Phase
+                            3</a></li>
+                    <li><a href="#phase4"
+                            class="text-lg font-semibold text-[#ffa600] hover:text-[#003f5c] transition-colors p-2 rounded-lg">Phase
+                            4</a></li>
+                    <li><a href="#phase5"
+                            class="text-lg font-semibold text-[#a05195] hover:text-[#003f5c] transition-colors p-2 rounded-lg">Phase
+                            5</a></li>
+                    <li><a href="#budget"
+                            class="text-lg font-semibold text-gray-600 hover:text-[#003f5c] transition-colors p-2 rounded-lg">Budget</a>
+                    </li>
+                    <li><a href="#projections"
+                            class="text-lg font-semibold text-gray-600 hover:text-[#003f5c] transition-colors p-2 rounded-lg">Projections</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-                    <div class="mb-8 flex justify-between items-center w-full right-timeline">
-                        <div class="order-1 w-5/12 p-4">
-                            <img src="./img/image9.png" alt="Illustration of 3D Marketplace and design tools"
-                                class="rounded-lg shadow-xl w-full h-auto object-cover">
+        <main>
+            <section id="roadmap-overview" class="mb-20 md:mb-28">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-center text-[#003f5c] mb-8">🗺️ Feature & Strategy
+                    Roadmap</h2>
+                <p class="text-xl md:text-2xl text-center text-gray-600 max-w-5xl mx-auto mb-16">
+                    Our comprehensive 5-phase development plan to build the world's premier aquarium design platform,
+                    combining cutting-edge **AI technology** with a **vibrant community ecosystem**.
+                </p>
+
+                <div class="relative max-w-6xl mx-auto">
+                    <div class="flex justify-between items-center mb-12">
+                        <div class="flex flex-col items-center">
+                            <div
+                                class="w-10 h-10 rounded-full bg-[#d45087] flex items-center justify-center text-white font-bold text-xl ring-4 ring-[#d45087] ring-opacity-30">
+                                1</div>
+                            <p class="mt-3 font-bold text-[#d45087]">P1: Platform</p>
                         </div>
-                        <div class="z-20 flex items-center order-1 bg-[#f95d6a] shadow-xl w-16 h-16 rounded-full">
-                            <h1 class="mx-auto font-semibold text-3xl text-white">1</h1>
+                        <div class="flex flex-col items-center">
+                            <div
+                                class="w-10 h-10 rounded-full bg-[#f95d6a] flex items-center justify-center text-white font-bold text-xl ring-4 ring-[#f95d6a] ring-opacity-30">
+                                2</div>
+                            <p class="mt-3 font-bold text-[#f95d6a]">P2: Revenue</p>
                         </div>
-                        <div class="order-1 bg-white rounded-lg shadow-xl w-5/12 px-6 py-4 timeline-card-content">
-                            <h3 class="mb-3 font-bold text-[#d45087] text-3xl">🛍️ Phase 1: Marketplace & Creator
-                                Platform
-                                Development</h3>
-                            <p class="text-3xl font-semibold text-gray-700">Features & Strategy:</p>
-                            <ul class="list-disc list-inside text-3xl text-gray-600 space-y-1 mt-2">
-                                <li>Build a solid MVP platform, attracting initial users.</li>
-                                <li>AI suggests products from the marketplace or linked sites to complete the design.
+                        <div class="flex flex-col items-center">
+                            <div
+                                class="w-10 h-10 rounded-full bg-[#ff7c43] flex items-center justify-center text-white font-bold text-xl ring-4 ring-[#ff7c43] ring-opacity-30">
+                                3</div>
+                            <p class="mt-3 font-bold text-[#ff7c43]">P3: Community</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div
+                                class="w-10 h-10 rounded-full bg-[#ffa600] flex items-center justify-center text-white font-bold text-xl ring-4 ring-[#ffa600] ring-opacity-30">
+                                4</div>
+                            <p class="mt-3 font-bold text-[#ffa600]">P4: AI Care</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div
+                                class="w-10 h-10 rounded-full bg-[#a05195] flex items-center justify-center text-white font-bold text-xl ring-4 ring-[#a05195] ring-opacity-30">
+                                5</div>
+                            <p class="mt-3 font-bold text-[#a05195]">P5: Global</p>
+                        </div>
+                    </div>
+                    <div
+                        class="h-2 bg-gradient-to-r from-[#d45087] via-[#f95d6a] via-[#ff7c43] via-[#ffa600] to-[#a05195] rounded-full">
+                    </div>
+                </div>
+            </section>
+
+            ---
+
+            <section id="phase1" class="mb-20 md:mb-28 bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div class="bg-gradient-to-r from-[#d45087] to-[#f95d6a] p-8 text-white">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center">
+                            <span
+                                class="text-3xl font-bold bg-white text-[#d45087] rounded-full w-14 h-14 flex items-center justify-center mr-6 flex-shrink-0">1</span>
+                            <h2 class="text-3xl md:text-4xl font-extrabold">🛍️ Phase 1: Marketplace & Creator Platform
+                                Development</h2>
+                        </div>
+                        <div class="text-right flex-shrink-0 mt-4 md:mt-0">
+                            <p class="text-xl font-semibold">Duration: 4 months</p>
+                            <p class="text-lg font-light">(09/2025 – 12/2025)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 md:p-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center phase-content">
+                        <div class="lg:order-1">
+                            <h3 class="text-3xl font-bold text-[#003f5c] mb-6">Features & Strategy:</h3>
+                            <ul class="list-disc list-inside text-xl text-gray-700 space-y-4">
+                                <li>Build a solid **MVP platform**, attracting initial users.</li>
+                                <li>AI suggests products from the marketplace or linked sites to **complete the
+                                    design**.
                                 </li>
                                 <li>Users can upload photos for **AI Builder** to create an image pool of items.</li>
-                                <li>Develop an intuitive 3D drag-and-drop tool.</li>
+                                <li>Develop an intuitive **3D drag-and-drop tool**.</li>
                                 <li>Open the Marketplace to allow all users to list and sell products.</li>
                             </ul>
+
+                            <div class="mt-10 p-6 bg-gray-100 rounded-xl border-l-4 border-[#d45087]">
+                                <h4 class="text-2xl font-bold text-[#003f5c] mb-3">Key Metrics:</h4>
+                                <ul class="list-none text-xl text-gray-700 space-y-2">
+                                    <li>• Target: **5,000+ users**</li>
+                                    <li>• Budget: **125,000,000 VNĐ** (Initial Investment)</li>
+                                    <li>• Focus: **Platform foundation** & user acquisition</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="lg:order-2">
+                            <img src="./img/image9.png" alt="Illustration of 3D Marketplace and design tools"
+                                class="rounded-xl shadow-2xl content-image">
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
-                        <div class="order-1 w-5/12 p-4">
+            ---
+
+            <section id="phase2" class="mb-20 md:mb-28 bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div class="bg-gradient-to-r from-[#f95d6a] to-[#ff7c43] p-8 text-white">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center">
+                            <span
+                                class="text-3xl font-bold bg-white text-[#f95d6a] rounded-full w-14 h-14 flex items-center justify-center mr-6 flex-shrink-0">2</span>
+                            <h2 class="text-3xl md:text-4xl font-extrabold">💰 Phase 2: Revenue Surge with AI Builder
+                            </h2>
+                        </div>
+                        <div class="text-right flex-shrink-0 mt-4 md:mt-0">
+                            <p class="text-xl font-semibold">Duration: 6 months</p>
+                            <p class="text-lg font-light">(01/2026 – 06/2026)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 md:p-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center phase-content">
+                        <div class="lg:order-2">
                             <img src="./img/image2.png" alt="Illustration of automatic aquarium creation by AI Builder"
-                                class="rounded-lg shadow-xl w-full h-auto object-cover">
+                                class="rounded-xl shadow-2xl content-image">
                         </div>
-                        <div class="z-20 flex items-center order-1 bg-[#ff7c43] shadow-xl w-16 h-16 rounded-full">
-                            <h1 class="mx-auto text-white font-semibold text-3xl">2</h1>
-                        </div>
-                        <div class="order-1 bg-white rounded-lg shadow-xl w-5/12 px-6 py-4 timeline-card-content">
-                            <h3 class="mb-3 font-bold text-[#f95d6a] text-3xl">💰 Phase 2: Revenue Surge with AI Builder
-                            </h3>
-                            <p class="text-3xl font-semibold text-gray-700">Features & Strategy:</p>
-                            <ul class="list-disc list-inside text-3xl text-gray-600 space-y-1 mt-2">
+                        <div class="lg:order-1">
+                            <h3 class="text-3xl font-bold text-[#003f5c] mb-6">Features & Strategy:</h3>
+                            <ul class="list-disc list-inside text-xl text-gray-700 space-y-4">
                                 <li>Launch **AI Builder**: automatically create a complete aquarium from a prompt or
                                     user-provided item images.</li>
                                 <li>AI will guide and suggest users on building a complete aquarium step-by-step.</li>
-                                <li>Monetization strategy: Introduce a **Premium** package for users (AI Builder usage,
-                                    smoother 3D experience) and an **Advertising** package for shops (products
-                                    prioritized by AI in suggestions).</li>
+                                <li>Monetization strategy: Introduce a **Premium** package (AI Builder usage, smoother
+                                    3D) and an **Advertising** package for shops.</li>
                                 <li>Decorate the surroundings of the aquarium with plants, lighting, and decorative
                                     items.</li>
-                                <li>Goal: Achieve profitability within the middle 2 months of this phase.</li>
+                                <li>Goal: Achieve **profitability** within the middle 2 months of this phase.</li>
                             </ul>
+
+                            <div class="mt-10 p-6 bg-gray-100 rounded-xl border-l-4 border-[#f95d6a]">
+                                <h4 class="text-2xl font-bold text-[#003f5c] mb-3">Key Metrics:</h4>
+                                <ul class="list-none text-xl text-gray-700 space-y-2">
+                                    <li>• Target: **10,000+ users**</li>
+                                    <li>• Budget: **250,000,000 VNĐ**</li>
+                                    <li>• Revenue Target: **350,000,000 VNĐ**</li>
+                                    <li>• Focus: **Monetization** & user growth</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <div class="mb-8 flex justify-between items-center w-full right-timeline">
-                        <div class="order-1 w-5/12 p-4">
-                            <img src="./img/image10.png" alt="Illustration of user community sharing designs"
-                                class="rounded-lg shadow-xl w-full h-auto object-cover">
+            ---
+
+            <section id="phase3" class="mb-20 md:mb-28 bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div class="bg-gradient-to-r from-[#ff7c43] to-[#ffa600] p-8 text-white">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center">
+                            <span
+                                class="text-3xl font-bold bg-white text-[#ff7c43] rounded-full w-14 h-14 flex items-center justify-center mr-6 flex-shrink-0">3</span>
+                            <h2 class="text-3xl md:text-4xl font-extrabold">🌐 Phase 3: Complete Community Ecosystem
+                            </h2>
                         </div>
-                        <div class="z-20 flex items-center order-1 bg-[#ffa600] shadow-xl w-16 h-16 rounded-full">
-                            <h1 class="mx-auto font-semibold text-3xl text-white">3</h1>
+                        <div class="text-right flex-shrink-0 mt-4 md:mt-0">
+                            <p class="text-xl font-semibold">Duration: 6 months</p>
+                            <p class="text-lg font-light">(07/2026 – 12/2026)</p>
                         </div>
-                        <div class="order-1 bg-white rounded-lg shadow-xl w-5/12 px-6 py-4 timeline-card-content">
-                            <h3 class="mb-3 font-bold text-[#ff7c43] text-3xl">🌐 Phase 3: Complete Community Ecosystem
-                            </h3>
-                            <p class="text-3xl font-semibold text-gray-700">Features & Strategy:</p>
-                            <ul class="list-disc list-inside text-3xl text-gray-600 space-y-1 mt-2">
-                                <li>Build social features: forums, user profiles, design contests.</li>
-                                <li>Enhance user engagement and retention.</li>
+                    </div>
+                </div>
+
+                <div class="p-8 md:p-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center phase-content">
+                        <div class="lg:order-1">
+                            <h3 class="text-3xl font-bold text-[#003f5c] mb-6">Features & Strategy:</h3>
+                            <ul class="list-disc list-inside text-xl text-gray-700 space-y-4">
+                                <li>Build **social features**: forums, user profiles, design contests.</li>
+                                <li>Enhance **user engagement** and retention.</li>
                                 <li>Generate **User-Generated Content (UGC)** to enrich the ecosystem.</li>
+                                <li>Implement features for sharing and discovering community tank designs.</li>
                             </ul>
+
+                            <div class="mt-10 p-6 bg-gray-100 rounded-xl border-l-4 border-[#ff7c43]">
+                                <h4 class="text-2xl font-bold text-[#003f5c] mb-3">Key Metrics:</h4>
+                                <ul class="list-none text-xl text-gray-700 space-y-2">
+                                    <li>• Target: **20,000+ users**</li>
+                                    <li>• Budget: **200,000,000 VNĐ**</li>
+                                    <li>• Revenue Target: **550,000,000 VNĐ**</li>
+                                    <li>• Focus: **Community building** & engagement</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="lg:order-2">
+                            <img src="./img/image10.png" alt="Illustration of user community sharing designs"
+                                class="rounded-xl shadow-2xl content-image">
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
-                        <div class="order-1 w-5/12 p-4">
+            ---
+
+            <section id="phase4" class="mb-20 md:mb-28 bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div class="bg-gradient-to-r from-[#ffa600] to-[#a05195] p-8 text-white">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center">
+                            <span
+                                class="text-3xl font-bold bg-white text-[#ffa600] rounded-full w-14 h-14 flex items-center justify-center mr-6 flex-shrink-0">4</span>
+                            <h2 class="text-3xl md:text-4xl font-extrabold">🩺 Phase 4: Intelligent AI Care</h2>
+                        </div>
+                        <div class="text-right flex-shrink-0 mt-4 md:mt-0">
+                            <p class="text-xl font-semibold">Duration: 9 months</p>
+                            <p class="text-lg font-light">(01/2027 – 09/2027)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 md:p-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center phase-content">
+                        <div class="lg:order-2">
                             <img src="./img/image7.png" alt="Illustration of AI caring for and diagnosing fish diseases"
-                                class="rounded-lg shadow-xl w-full h-auto object-cover">
+                                class="rounded-xl shadow-2xl content-image">
                         </div>
-                        <div class="z-20 flex items-center order-1 bg-[#a05195] shadow-xl w-16 h-16 rounded-full">
-                            <h1 class="mx-auto text-white font-semibold text-3xl">4</h1>
-                        </div>
-                        <div class="order-1 bg-white rounded-lg shadow-xl w-5/12 px-6 py-4 timeline-card-content">
-                            <h3 class="mb-3 font-bold text-[#ffa600] text-3xl">🩺 Phase 4: Intelligent AI Care</h3>
-                            <p class="text-3xl font-semibold text-gray-700">Features & Strategy:</p>
-                            <ul class="list-disc list-inside text-3xl text-gray-600 space-y-1 mt-2">
+                        <div class="lg:order-1">
+                            <h3 class="text-3xl font-bold text-[#003f5c] mb-6">Features & Strategy:</h3>
+                            <ul class="list-disc list-inside text-xl text-gray-700 space-y-4">
                                 <li>Develop the AI into a "**virtual aquatic doctor**", diagnosing fish/plant diseases
-                                    via image analysis.</li>
+                                    via **image analysis**.</li>
                                 <li>Offer "**intelligent care feature packages**" for premium users.</li>
-                                <li>Create a new sustainable revenue stream based on R&D.</li>
+                                <li>Create a new **sustainable revenue stream** based on R&D.</li>
+                                <li>Integrate basic environmental monitoring capabilities (simulated or real-time data
+                                    input).</li>
                             </ul>
+
+                            <div class="mt-10 p-6 bg-gray-100 rounded-xl border-l-4 border-[#ffa600]">
+                                <h4 class="text-2xl font-bold text-[#003f5c] mb-3">Key Metrics:</h4>
+                                <ul class="list-none text-xl text-gray-700 space-y-2">
+                                    <li>• Target: **40,000+ users**</li>
+                                    <li>• Budget: **375,000,000 VNĐ**</li>
+                                    <li>• Revenue Target: **950,000,000 VNĐ**</li>
+                                    <li>• Focus: **Advanced AI features** & R&D</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <div class="mb-8 flex justify-between items-center w-full right-timeline">
-                        <div class="order-1 w-5/12 p-4">
-                            <img src="./img/image.png" alt="Illustration of global connection API"
-                                class="rounded-lg shadow-xl w-full h-auto object-cover">
+            ---
+
+            <section id="phase5" class="mb-20 md:mb-28 bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div class="bg-gradient-to-r from-[#a05195] to-[#665191] p-8 text-white">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center">
+                            <span
+                                class="text-3xl font-bold bg-white text-[#a05195] rounded-full w-14 h-14 flex items-center justify-center mr-6 flex-shrink-0">5</span>
+                            <h2 class="text-3xl md:text-4xl font-extrabold">🌍 Phase 5: Global Market Dominance</h2>
                         </div>
-                        <div class="z-20 flex items-center order-1 bg-[#665191] shadow-xl w-16 h-16 rounded-full">
-                            <h1 class="mx-auto font-semibold text-3xl text-white">5</h1>
+                        <div class="text-right flex-shrink-0 mt-4 md:mt-0">
+                            <p class="text-xl font-semibold">Duration: 12 months</p>
+                            <p class="text-lg font-light">(10/2027 – 09/2028)</p>
                         </div>
-                        <div class="order-1 bg-white rounded-lg shadow-xl w-5/12 px-6 py-4 timeline-card-content">
-                            <h3 class="mb-3 font-bold text-[#a05195] text-3xl">🌍 Phase 5: Global Market Dominance
-                            </h3>
-                            <p class="text-3xl font-semibold text-gray-700">Features & Strategy:</p>
-                            <ul class="list-disc list-inside text-3xl text-gray-600 space-y-1 mt-2">
+                    </div>
+                </div>
+
+                <div class="p-8 md:p-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center phase-content">
+                        <div class="lg:order-1">
+                            <h3 class="text-3xl font-bold text-[#003f5c] mb-6">Features & Strategy:</h3>
+                            <ul class="list-disc list-inside text-xl text-gray-700 space-y-4">
                                 <li>Build an **open API**, requiring global shops to integrate to have their products
                                     suggested by AI.</li>
                                 <li>Transition to a **B2B model**, charging maintenance and advertising fees to
                                     partners.</li>
-                                <li>Cement Finverse's exclusive position in the international market.</li>
+                                <li>Cement Finverse's **exclusive position** in the international market.</li>
+                                <li>Introduce multi-language support and localized marketplace for key regions.</li>
                             </ul>
+
+                            <div class="mt-10 p-6 bg-gray-100 rounded-xl border-l-4 border-[#a05195]">
+                                <h4 class="text-2xl font-bold text-[#003f5c] mb-3">Key Metrics:</h4>
+                                <ul class="list-none text-xl text-gray-700 space-y-2">
+                                    <li>• Target: **100,000+ users**</li>
+                                    <li>• Budget: **500,000,000 VNĐ**</li>
+                                    <li>• Revenue Target: **2,500,000,000 VNĐ** (2.5 Tỷ VNĐ)</li>
+                                    <li>• Focus: **Global expansion** & B2B partnerships</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="lg:order-2">
+                            <img src="./img/image.png" alt="Illustration of global connection API"
+                                class="rounded-xl shadow-2xl content-image">
                         </div>
                     </div>
-
                 </div>
             </section>
 
-            <section id="budget" class="mb-16 md:mb-24">
-                <h2 class="text-3xl md:text-4xl font-bold text-center text-[#003f5c] mb-12">
+            ---
+
+            <section id="budget" class="mb-20 md:mb-28">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-center text-[#003f5c] mb-12">
                     📊 Cost & Time Allocation
                 </h2>
-                <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="p-4 font-bold text-gray-600 text-3xl">Phase</th>
-                                <th class="p-4 font-bold text-gray-600 text-3xl">Duration</th>
-                                <th class="p-4 font-bold text-gray-600 text-3xl">Estimated Cost (VNĐ)</th>
-                                <th class="p-4 font-bold text-gray-600 text-3xl">Budget Allocation</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b">
-                                <td class="p-4 font-semibold text-[#d45087] text-3xl">P1: Platform (MVP)</td>
-                                <td class="p-4 text-3xl">4 months<br>(09/2025 – 12/2025)</td>
-                                <td class="p-4 font-semibold text-3xl">125,000,000 VNĐ</td>
-                                <td class="p-4 text-gray-700 text-3xl">
-                                    Dev Team, UI/UX design, initial infrastructure cost and marketing.
-                                </td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="p-4 font-semibold text-[#f95d6a] text-3xl">P2: Revenue</td>
-                                <td class="p-4 text-3xl">6 months<br>(01/2026 – 06/2026)</td>
-                                <td class="p-4 font-semibold text-3xl">250,000,000 VNĐ</td>
-                                <td class="p-4 text-gray-700 text-3xl">
-                                    AI Builder development, payment integration, marketing & advertising.
-                                </td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="p-4 font-semibold text-[#ff7c43] text-3xl">P3: Community</td>
-                                <td class="p-4 text-3xl">6 months<br>(07/2026 – 12/2026)</td>
-                                <td class="p-4 font-semibold text-3xl">200,000,000 VNĐ</td>
-                                <td class="p-4 text-gray-700 text-3xl">
-                                    Building social features, organizing events, server upgrades.
-                                </td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="p-4 font-semibold text-[#ffa600] text-3xl">P4: AI Care</td>
-                                <td class="p-4 text-3xl">9 months<br>(01/2027 – 09/2027)</td>
-                                <td class="p-4 font-semibold text-3xl">375,000,000 VNĐ</td>
-                                <td class="p-4 text-gray-700 text-3xl">
-                                    R&D and AI training (Computer Vision), purchasing/acquiring dataset.
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="p-4 font-semibold text-[#a05195] text-3xl">P5: Global</td>
-                                <td class="p-4 text-3xl">12 months<br>(10/2027 – 09/2028)</td>
-                                <td class="p-4 font-semibold text-3xl">500,000,000 VNĐ</td>
-                                <td class="p-4 text-gray-700 text-3xl">
-                                    API development, international business development, multi-national infrastructure.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div class="chart-container order-2 lg:order-1">
+                            <h3 class="text-2xl font-bold text-[#003f5c] mb-6 text-center">Phân bổ Ngân sách theo Giai
+                                đoạn (%)</h3>
+                            <canvas id="budgetAllocationChart"></canvas>
+                        </div>
+                        <div class="overflow-x-auto order-1 lg:order-2">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-100 border-b-2 border-[#003f5c]">
+                                    <tr>
+                                        <th class="p-4 font-extrabold text-[#003f5c] text-xl">Phase</th>
+                                        <th class="p-4 font-extrabold text-[#003f5c] text-xl">Duration</th>
+                                        <th class="p-4 font-extrabold text-[#003f5c] text-xl text-right">Estimated Cost
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-4 font-semibold text-[#d45087] text-xl">P1: Platform (MVP)</td>
+                                        <td class="p-4 text-gray-700 text-xl">4 months</td>
+                                        <td class="p-4 font-bold text-xl text-right">125,000,000 VNĐ</td>
+                                    </tr>
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-4 font-semibold text-[#f95d6a] text-xl">P2: Revenue</td>
+                                        <td class="p-4 text-gray-700 text-xl">6 months</td>
+                                        <td class="p-4 font-bold text-xl text-right">250,000,000 VNĐ</td>
+                                    </tr>
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-4 font-semibold text-[#ff7c43] text-xl">P3: Community</td>
+                                        <td class="p-4 text-gray-700 text-xl">6 months</td>
+                                        <td class="p-4 font-bold text-xl text-right">200,000,000 VNĐ</td>
+                                    </tr>
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-4 font-semibold text-[#ffa600] text-xl">P4: AI Care</td>
+                                        <td class="p-4 text-gray-700 text-xl">9 months</td>
+                                        <td class="p-4 font-bold text-xl text-right">375,000,000 VNĐ</td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-4 font-semibold text-[#a05195] text-xl">P5: Global</td>
+                                        <td class="p-4 text-gray-700 text-xl">12 months</td>
+                                        <td class="p-4 font-bold text-xl text-right">500,000,000 VNĐ</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="bg-[#003f5c] text-white">
+                                        <td class="p-4 text-xl font-bold">Total Investment:</td>
+                                        <td class="p-4 text-xl font-bold">37 months</td>
+                                        <td class="p-4 text-xl font-bold text-right">1,450,000,000 VNĐ</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <section id="projections" class="mb-16 md:mb-24 bg-white rounded-xl shadow-lg p-6 md:p-10">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                    <div>
-                        <h2 class="text-3xl md:text-4xl font-bold text-[#003f5c] mb-8">🚀 Growth Projections</h2>
+            ---
 
-                        <div class="mb-10">
-                            <h3 class="text-2xl md:text-3xl font-bold text-[#003f5c] mb-4">📈 User Growth
-                            </h3>
+            <section id="projections" class="mb-20 md:mb-28 bg-white rounded-3xl shadow-2xl p-6 md:p-12">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-center text-[#003f5c] mb-12">🚀 Growth & Revenue
+                    Projections</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+                    <div class="lg:order-2 chart-container">
+                        <h3 class="text-2xl font-bold text-[#003f5c] mb-6 text-center">Đầu tư Lũy kế vs Doanh thu Dự
+                            kiến</h3>
+                        <canvas id="revenueProjectionChart"></canvas>
+                    </div>
+
+                    <div class="lg:order-1">
+                        <div class="mb-10 p-6 border-b border-gray-200">
+                            <h3 class="text-3xl font-bold text-[#003f5c] mb-4">📈 User Growth Targets</h3>
                             <ul class="list-none space-y-3">
-                                <li class="text-3xl text-gray-600"><strong
-                                        class="text-[#d45087] w-24 inline-block">P1:</strong>
-                                    5,000+ users</li>
-                                <li class="text-3xl text-gray-600"><strong
-                                        class="text-[#f95d6a] w-24 inline-block">P2:</strong>
-                                    10,000+ users</li>
-                                <li class="text-3xl text-gray-600"><strong
-                                        class="text-[#ff7c43] w-24 inline-block">P3:</strong>
-                                    20,000+ users</li>
-                                <li class="text-3xl text-gray-600"><strong
-                                        class="text-[#ffa600] w-24 inline-block">P4:</strong>
-                                    40,000+ users</li>
-                                <li class="text-3xl text-gray-600"><strong
-                                        class="text-[#a05195] w-24 inline-block">P5:</strong>
-                                    100,000+ users</li>
+                                <li class="text-xl text-gray-600"><strong class="text-[#d45087] w-28 inline-block">Phase
+                                        1:</strong>
+                                    **5,000+** users</li>
+                                <li class="text-xl text-gray-600"><strong class="text-[#f95d6a] w-28 inline-block">Phase
+                                        2:</strong>
+                                    **10,000+** users</li>
+                                <li class="text-xl text-gray-600"><strong class="text-[#ff7c43] w-28 inline-block">Phase
+                                        3:</strong>
+                                    **20,000+** users</li>
+                                <li class="text-xl text-gray-600"><strong class="text-[#ffa600] w-28 inline-block">Phase
+                                        4:</strong>
+                                    **40,000+** users</li>
+                                <li class="text-xl text-gray-600"><strong class="text-[#a05195] w-28 inline-block">Phase
+                                        5:</strong>
+                                    **100,000+** users</li>
                             </ul>
                         </div>
 
                         <div>
-                            <h3 class="text-2xl md:text-3xl font-bold text-[#003f5c] mb-4">📊 Revenue Scenario</h3>
-                            <p class="text-3xl text-gray-600 mb-4">To achieve the goal, we need to convert a very small
+                            <h3 class="text-3xl font-bold text-[#003f5c] mb-4">🎯 P2 Revenue Scenario (350M VNĐ)</h3>
+                            <p class="text-xl text-gray-700 mb-6">To achieve the goal, we need to convert a very small
                                 percentage of free users to paid subscribers, focusing on shops and professional users.
                             </p>
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-3xl font-semibold text-gray-700 mb-2">P2 Goal (350M Revenue):
-                                </p>
-                                <ul class="list-disc list-inside text-3xl text-gray-600 space-y-1">
-                                    <li>~ <strong>150</strong> shops (Business package)</li>
-                                    <li>~ <strong>645</strong> users (Premium package)</li>
-                                    <li>~ <strong>2000</strong> transactions with paid affiliate % commission</li>
-                                    <li>Required conversion rate: ~<strong class="text-[#f95d6a]">8%</strong></li>
+                            <div class="bg-gray-100 p-6 rounded-xl border-l-4 border-[#f95d6a]">
+                                <ul class="list-disc list-inside text-xl text-gray-700 space-y-2">
+                                    <li>~ **150** shops (Business package: 300K/mo)</li>
+                                    <li>~ **645** users (Premium package: 200K/mo)</li>
+                                    <li>~ **2,000** transactions with paid affiliate % commission (Marketplace)</li>
+                                    <li>Required Conversion Rate (Users to Paid/Shop): ~**8%** (Based on 10,000 users)
+                                    </li>
                                 </ul>
                             </div>
                         </div>
-
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="revenueProjectionChart"></canvas>
                     </div>
                 </div>
             </section>
+<!-- 
+            ---
 
-
-            <section id="revenue" class="mb-16 md:mb-24">
-                <h2 class="text-3xl md:text-4xl font-bold text-center text-[#003f5c] mb-12">💰 Diverse Revenue Model
+            <section id="revenue" class="mb-20 md:mb-28">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-center text-[#003f5c] mb-12">💰 Diverse Revenue
+                    Model
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center border-t-4 border-[#f95d6a]">
-                        <div class="text-4xl mb-4">🛒</div>
-                        <h3 class="text-3xl font-bold text-[#003f5c] mb-2">Transaction Fee</h3>
-                        <p class="text-3xl text-gray-600">Charge a **12% commission** on every successful transaction
+                    <div
+                        class="bg-white p-8 rounded-2xl shadow-xl text-center border-t-8 border-[#f95d6a] hover:shadow-2xl transition">
+                        <div class="text-5xl mb-4 text-[#f95d6a]">🛒</div>
+                        <h3 class="text-2xl font-bold text-[#003f5c] mb-3">Transaction Fee</h3>
+                        <p class="text-lg text-gray-600">Charge a **12% commission** on every successful transaction
                             through the Marketplace, generating direct revenue from commercial activity.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center border-t-4 border-[#ff7c43]">
-                        <div class="text-4xl mb-4">🔗</div>
-                        <h3 class="text-3xl font-bold text-[#003f5c] mb-2">Affiliate Marketing</h3>
-                        <p class="text-3xl text-gray-600">Generate passive income by attaching affiliate links to 3D
-                            items, linking to e-commerce platforms.</p>
+                    <div
+                        class="bg-white p-8 rounded-2xl shadow-xl text-center border-t-8 border-[#ff7c43] hover:shadow-2xl transition">
+                        <div class="text-5xl mb-4 text-[#ff7c43]">🔗</div>
+                        <h3 class="text-2xl font-bold text-[#003f5c] mb-3">Affiliate Marketing</h3>
+                        <p class="text-lg text-gray-600">Generate passive income by attaching **affiliate links** to 3D
+                            items, linking directly to e-commerce platforms.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center border-t-4 border-[#ffa600]">
-                        <div class="text-4xl mb-4">👑</div>
-                        <h3 class="text-3xl font-bold text-[#003f5c] mb-2">Premium Package</h3>
-                        <p class="text-3xl text-gray-600">Sell subscription packages to users who want to use AI to
-                            automatically create aquariums, experience smoother 3D design, and other premium features.
-                        </p>
+                    <div
+                        class="bg-white p-8 rounded-2xl shadow-xl text-center border-t-8 border-[#ffa600] hover:shadow-2xl transition">
+                        <div class="text-5xl mb-4 text-[#ffa600]">👑</div>
+                        <h3 class="text-2xl font-bold text-[#003f5c] mb-3">Premium Package</h3>
+                        <p class="text-lg text-gray-600">Sell subscription packages for **Unlimited AI Builder** usage,
+                            priority 3D performance, and exclusive features.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center border-t-4 border-[#a05195]">
-                        <div class="text-4xl mb-4">📢</div>
-                        <h3 class="text-3xl font-bold text-[#003f5c] mb-2">Advertising & API Fee</h3>
-                        <p class="text-3xl text-gray-600">Shops pay a fee for their products to be prioritized by AI
-                            suggestions, and pay a maintenance fee when integrating the API into the global system.</p>
+                    <div
+                        class="bg-white p-8 rounded-2xl shadow-xl text-center border-t-8 border-[#a05195] hover:shadow-2xl transition">
+                        <div class="text-5xl mb-4 text-[#a05195]">📢</div>
+                        <h3 class="text-2xl font-bold text-[#003f5c] mb-3">Advertising & API Fee</h3>
+                        <p class="text-lg text-gray-600">Shops pay a fee for **prioritized product display** by AI and a
+                            maintenance fee for global API integration.</p>
                     </div>
                 </div>
-            </section>
+            </section> -->
+
 
             <section id="pricing" class="mb-16 md:mb-24">
-                <h2 class="text-3xl md:text-4xl font-bold text-center text-[#003f5c] mb-12">💎 Service Pricing</h2>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-center text-[#003f5c] mb-12">💎 Service Pricing</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
 
-                    <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col border-t-4 border-gray-300">
-                        <h3 class="text-3xl font-bold text-[#003f5c] text-center mb-2">Free</h3>
-                        <p class="text-center text-gray-500 text-3xl mb-6">For beginners</p>
+                    <div class="bg-white p-8 rounded-2xl shadow-xl flex flex-col border-t-8 border-gray-300">
+                        <h3 class="text-3xl font-bold text-[#003f5c] text-center mb-3">Free</h3>
+                        <p class="text-center text-gray-500 text-xl mb-6">For hobbyists & beginners</p>
                         <p class="text-center text-5xl font-black text-[#003f5c] mb-6">0<span
-                                class="text-3xl font-semibold"> VNĐ</span></p>
-                        <ul class="text-3xl text-gray-600 space-y-3 mb-8 flex-grow">
-                            <li>✔️ Basic 3D design tools</li>
-                            <li>✔️ Limited Marketplace access</li>
-                            <li>✔️ 03 AI Builder free trials</li>
-                            <li>✔️ Community participation</li>
+                                class="text-2xl font-semibold"> VNĐ</span></p>
+                        <ul class="text-xl text-gray-700 space-y-4 mb-10 flex-grow">
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> Basic 3D design tools</li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> Limited Marketplace access</li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> 03 AI Builder free trials</li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> Full Community participation</li>
                         </ul>
                         <button
-                            class="w-full bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg text-3xl transition duration-300">Current
+                            class="w-full bg-gray-200 text-gray-800 font-bold py-4 px-6 rounded-xl text-xl transition duration-300">Current
                             Package</button>
                     </div>
 
                     <div
-                        class="bg-white p-8 rounded-xl shadow-2xl flex flex-col border-t-4 border-[#ff7c43] transform scale-105">
+                        class="bg-white p-8 rounded-2xl shadow-2xl flex flex-col border-t-8 border-[#ff7c43] transform scale-100 lg:scale-105 transition-transform duration-300">
                         <p
-                            class="text-center bg-[#ff7c43] text-white font-bold py-1 px-4 rounded-full w-fit mx-auto -mt-12 mb-4 text-2xl">
+                            class="text-center bg-[#ff7c43] text-white font-bold py-2 px-6 rounded-full w-fit mx-auto -mt-12 mb-6 text-lg tracking-widest uppercase shadow-lg">
                             MOST POPULAR</p>
-                        <h3 class="text-4xl font-black text-[#003f5c] text-center mb-2">Premium</h3>
-                        <p class="text-center text-gray-500 text-3xl mb-6">Unlock AI power</p>
+                        <h3 class="text-4xl font-black text-[#003f5c] text-center mb-3">Premium</h3>
+                        <p class="text-center text-gray-500 text-xl mb-6">Unlock AI power & priority experience</p>
                         <p class="text-center text-6xl font-black text-[#003f5c] mb-2">200.000<span
-                                class="text-3xl font-semibold"> VNĐ</span></p>
-                        <p class="text-center text-gray-500 text-3xl mb-6">/ month</p>
-                        <ul class="text-3xl text-gray-600 space-y-3 mb-8 flex-grow">
-                            <li>✔️ All Free package benefits</li>
-                            <li>✔️ **Unlimited AI Builder** usage</li>
-                            <li>✔️ Ultra-smooth 3D experience (priority)</li>
-                            <li>✔️ Access to exclusive item collection</li>
-                            <li>✔️ Basic care suggestions from AI Care</li>
+                                class="text-2xl font-semibold"> VNĐ</span></p>
+                        <p class="text-center text-gray-500 text-xl mb-8">/ month</p>
+                        <ul class="text-xl text-gray-700 space-y-4 mb-10 flex-grow">
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> All Free package benefits</li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> **Unlimited AI Builder** usage
+                            </li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> Ultra-smooth 3D experience
+                                (Priority Server)</li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> Access to exclusive item
+                                collection</li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> Basic care suggestions from AI
+                                Care (P4)</li>
                         </ul>
                         <button
-                            class="w-full bg-[#ff7c43] hover:bg-[#f95d6a] text-white font-bold py-3 px-6 rounded-lg text-3xl transition duration-300">Upgrade
+                            class="w-full bg-[#ff7c43] hover:bg-[#f95d6a] text-white font-bold py-4 px-6 rounded-xl text-xl transition duration-300 shadow-lg">Upgrade
                             Now</button>
                     </div>
 
-                    <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col border-t-4 border-[#a05195]">
-                        <h3 class="text-3xl font-bold text-[#003f5c] text-center mb-2">Business</h3>
-                        <p class="text-center text-gray-500 text-3xl mb-6">For product advertising</p>
-                        <p class="text-center text-6xl font-black text-[#003f5c] mb-2">300.000<span
-                                class="text-3xl font-semibold"> VNĐ</span></p>
-                        <p class="text-center text-gray-500 text-3xl mb-6">/ month</p>
-                        <ul class="text-3xl text-gray-600 space-y-3 mb-8 flex-grow">
-                            <li>✔️ **Prioritized product display** in AI Builder</li>
-                            <li>✔️ Professional store page</li>
-                            <li>✔️ Data reporting & analysis</li>
-                            <li>✔️ API Integration (P5)</li>
-                            <li>✔️ Dedicated support</li>
+                    <div class="bg-white p-8 rounded-2xl shadow-xl flex flex-col border-t-8 border-[#a05195]">
+                        <h3 class="text-3xl font-bold text-[#003f5c] text-center mb-3">Business</h3>
+                        <p class="text-center text-gray-500 text-xl mb-6">For product advertising & shops</p>
+                        <p class="text-center text-5xl font-black text-[#003f5c] mb-2">300.000<span
+                                class="text-2xl font-semibold"> VNĐ</span></p>
+                        <p class="text-center text-gray-500 text-xl mb-8">/ month</p>
+                        <ul class="text-xl text-gray-700 space-y-4 mb-10 flex-grow">
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> **Prioritized product display** in
+                                AI Builder</li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> Professional store page & listing
+                            </li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> Data reporting & sales analysis
+                            </li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> API Integration (P5)</li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> Dedicated support & marketing
+                                partnership</li>
                         </ul>
                         <button
-                            class="w-full bg-[#a05195] hover:bg-[#665191] text-white font-bold py-3 px-6 rounded-lg text-3xl transition duration-300">Become
+                            class="w-full bg-[#a05195] hover:bg-[#665191] text-white font-bold py-4 px-6 rounded-xl text-xl transition duration-300">Become
                             a Partner</button>
                     </div>
 
@@ -379,60 +629,71 @@
     </div>
 
     <script>
-        const wrapLabel = (label) => {
-            const maxLen = 16;
-            if (label.length <= maxLen) return label;
-            const words = label.split(' ');
-            const lines = [];
-            let currentLine = '';
-            for (const word of words) {
-                if ((currentLine + ' ' + word).length > maxLen && currentLine.length > 0) {
-                    lines.push(currentLine);
-                    currentLine = word;
-                } else {
-                    currentLine = currentLine ? currentLine + ' ' + word : word;
-                }
-            }
-            if (currentLine) lines.push(currentLine);
-            return lines;
-        };
+        // Data for charts
+        const labels = ['P1: MVP', 'P2: Revenue', 'P3: Ecosystem', 'P4: AI Care', 'P5: Global'];
+        const investmentCosts = [125000000, 250000000, 200000000, 375000000, 500000000];
+        const projectedRevenue = [0, 350000000, 550000000, 950000000, 2500000000];
+        const colors = ['#d45087', '#f95d6a', '#ff7c43', '#ffa600', '#a05195'];
 
+        // Helper function for VNĐ formatting
         const formatVNCurrency = (value) => {
             if (value >= 1000000000) {
-                return (value / 1000000000).toFixed(1).replace('.0', '') + ' Bil';
+                return (value / 1000000000).toFixed(1).replace('.0', '') + ' Tỷ';
             }
             if (value >= 1000000) {
-                return (value / 1000000).toFixed(0) + ' Mil';
+                return (value / 1000000).toFixed(0) + ' Tr';
             }
             return new Intl.NumberFormat('vi-VN', {
                 style: 'currency',
-                currency: 'VND'
+                currency: 'VND',
+                maximumFractionDigits: 0
             }).format(value);
         };
 
-        const labels = ['P1: MVP', 'P2: Revenue', 'P3: Ecosystem', 'P4: AI Care', 'P5: Global'];
-
+        // --- CHART 1: REVENUE PROJECTION (Combined Bar & Line) ---
         const revenueProjectionCtx = document.getElementById('revenueProjectionChart').getContext('2d');
-        const revenueProjectionChart = new Chart(revenueProjectionCtx, {
+        const cumulativeInvestment = investmentCosts.reduce((acc, current) => {
+            if (acc.length === 0) {
+                acc.push(current);
+            } else {
+                acc.push(acc[acc.length - 1] + current);
+            }
+            return acc;
+        }, []);
+
+        const cumulativeRevenue = projectedRevenue.reduce((acc, current) => {
+            if (acc.length === 0) {
+                acc.push(current);
+            } else {
+                acc.push(acc[acc.length - 1] + current);
+            }
+            return acc;
+        }, []);
+
+        new Chart(revenueProjectionCtx, {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Estimated Investment Cost (VNĐ)',
-                    data: [125000000, 250000000, 200000000, 375000000, 500000000],
-                    backgroundColor: '#003f5c',
+                    label: 'Đầu tư Lũy kế (VNĐ)',
+                    data: cumulativeInvestment,
+                    backgroundColor: '#003f5c', // Dark blue for investment
                     borderColor: '#003f5c',
                     borderWidth: 1,
                     order: 2,
+                    yAxisID: 'y'
                 }, {
-                    label: 'Projected Revenue (VNĐ)',
-                    data: [0, 350000000, 550000000, 950000000, 2500000000],
+                    label: 'Doanh thu Lũy kế Dự kiến (VNĐ)',
+                    data: cumulativeRevenue,
                     type: 'line',
-                    borderColor: '#ffa600',
-                    backgroundColor: '#ffa600',
-                    tension: 0.3,
-                    fill: false,
+                    borderColor: '#ffa600', // Orange for revenue
+                    backgroundColor: 'rgba(255, 166, 0, 0.5)', // Filled area under line
+                    fill: 'origin', // Fill area under the line
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#ffa600',
                     order: 1,
+                    yAxisID: 'y'
                 }]
             },
             options: {
@@ -441,10 +702,20 @@
                 scales: {
                     y: {
                         beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Giá trị (VNĐ)'
+                        },
                         ticks: {
                             callback: function (value) {
                                 return formatVNCurrency(value);
                             }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Giai đoạn'
                         }
                     }
                 },
@@ -454,15 +725,6 @@
                     },
                     tooltip: {
                         callbacks: {
-                            title: function (tooltipItems) {
-                                const item = tooltipItems[0];
-                                let label = item.chart.data.labels[item.dataIndex];
-                                if (Array.isArray(label)) {
-                                    return label.join(' ');
-                                } else {
-                                    return label;
-                                }
-                            },
                             label: function (context) {
                                 let label = context.dataset.label || '';
                                 if (label) {
@@ -471,10 +733,50 @@
                                 if (context.parsed.y !== null) {
                                     label += new Intl.NumberFormat('vi-VN', {
                                         style: 'currency',
-                                        currency: 'VND'
+                                        currency: 'VND',
+                                        maximumFractionDigits: 0
                                     }).format(context.parsed.y);
                                 }
                                 return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- CHART 2: BUDGET ALLOCATION (Pie Chart) ---
+        const budgetAllocationCtx = document.getElementById('budgetAllocationChart').getContext('2d');
+        const totalInvestment = investmentCosts.reduce((sum, cost) => sum + cost, 0);
+
+        new Chart(budgetAllocationCtx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: investmentCosts,
+                    backgroundColor: colors,
+                    hoverOffset: 15,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const value = context.parsed;
+                                const percentage = ((value / totalInvestment) * 100).toFixed(1) + '%';
+                                return `${context.label}: ${formatVNCurrency(value)} (${percentage})`;
                             }
                         }
                     }
