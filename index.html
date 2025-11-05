@@ -71,11 +71,16 @@
 </head>
 
 <body class="bg-gray-50 text-gray-800">
+    <img src="./img/logo.png" alt="All-in-one Logo"
+        class="fixed top-6 right-6 h-32 md:h-40 w-auto z-50 shadow-xl rounded-xl bg-white p-2 border-4 border-gray-100">
+
     <div class="container mx-auto p-4 md:p-8">
 
         <header class="text-center mb-16 md:mb-20">
-            <h1 class="text-5xl md:text-7xl font-black text-[#003f5c] tracking-tight">All-in-one</h1>
-            <p class="text-xl md:text-2xl text-gray-600 mt-4">Aquarium Design & Community Platform</p>
+            <div class="flex flex-col items-center justify-center">
+                <h1 class="text-5xl md:text-7xl font-black text-[#003f5c] tracking-tight">All-in-one</h1>
+                <p class="text-xl md:text-2xl text-gray-600 mt-4">Aquarium Design & Community Platform</p>
+            </div>
         </header>
 
         <nav class="sticky-nav rounded-xl mb-12 border-b border-gray-200">
@@ -513,46 +518,6 @@
                     </div>
                 </div>
             </section>
-            <!-- 
-            ---
-
-            <section id="revenue" class="mb-20 md:mb-28">
-                <h2 class="text-4xl md:text-5xl font-extrabold text-center text-[#003f5c] mb-12">💰 Diverse Revenue
-                    Model
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div
-                        class="bg-white p-8 rounded-2xl shadow-xl text-center border-t-8 border-[#f95d6a] hover:shadow-2xl transition">
-                        <div class="text-5xl mb-4 text-[#f95d6a]">🛒</div>
-                        <h3 class="text-2xl font-bold text-[#003f5c] mb-3">Transaction Fee</h3>
-                        <p class="text-lg text-gray-600">Charge a **12% commission** on every successful transaction
-                            through the Marketplace, generating direct revenue from commercial activity.</p>
-                    </div>
-                    <div
-                        class="bg-white p-8 rounded-2xl shadow-xl text-center border-t-8 border-[#ff7c43] hover:shadow-2xl transition">
-                        <div class="text-5xl mb-4 text-[#ff7c43]">🔗</div>
-                        <h3 class="text-2xl font-bold text-[#003f5c] mb-3">Affiliate Marketing</h3>
-                        <p class="text-lg text-gray-600">Generate passive income by attaching **affiliate links** to 3D
-                            items, linking directly to e-commerce platforms.</p>
-                    </div>
-                    <div
-                        class="bg-white p-8 rounded-2xl shadow-xl text-center border-t-8 border-[#ffa600] hover:shadow-2xl transition">
-                        <div class="text-5xl mb-4 text-[#ffa600]">👑</div>
-                        <h3 class="text-2xl font-bold text-[#003f5c] mb-3">Premium Package</h3>
-                        <p class="text-lg text-gray-600">Sell subscription packages for **Unlimited AI Builder** usage,
-                            priority 3D performance, and exclusive features.</p>
-                    </div>
-                    <div
-                        class="bg-white p-8 rounded-2xl shadow-xl text-center border-t-8 border-[#a05195] hover:shadow-2xl transition">
-                        <div class="text-5xl mb-4 text-[#a05195]">📢</div>
-                        <h3 class="text-2xl font-bold text-[#003f5c] mb-3">Advertising & API Fee</h3>
-                        <p class="text-lg text-gray-600">Shops pay a fee for **prioritized product display** by AI and a
-                            maintenance fee for global API integration.</p>
-                    </div>
-                </div>
-            </section> -->
-
-
             <section id="pricing" class="mb-16 md:mb-24">
                 <h2 class="text-4xl md:text-5xl font-extrabold text-center text-[#003f5c] mb-12">💎 Service Pricing</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
@@ -581,7 +546,7 @@
                             MOST POPULAR</p>
                         <h3 class="text-4xl font-black text-[#003f5c] text-center mb-3">Premium</h3>
                         <p class="text-center text-gray-500 text-xl mb-6">Unlock AI power & priority experience</p>
-                        <p class="text-center text-6xl font-black text-[#003f5c] mb-2">200.000<span
+                        <p class="text-center text-5xl font-black text-[#003f5c] mb-2">200.000<span
                                 class="text-2xl font-semibold">
                                 VNĐ</span></p>
                         <p class="text-center text-gray-500 text-xl mb-8">/ month</p>
@@ -593,8 +558,8 @@
                                 (Priority Server)</li>
                             <li><span class="text-green-500 font-bold mr-2">✔️</span> Access to exclusive item
                                 collection</li>
-                            <li><span class="text-green-500 font-bold mr-2">✔️</span> Basic care suggestions from AI
-                                Care (P4)</li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> **Basic Design Compatibility
+                                Check**</li>
                         </ul>
                         <button
                             class="w-full bg-[#ff7c43] hover:bg-[#f95d6a] text-white font-bold py-4 px-6 rounded-xl text-xl transition duration-300 shadow-lg">Upgrade
@@ -636,16 +601,19 @@
                                 VNĐ</span></p>
                         <p class="text-center text-gray-500 text-xl mb-8">/ month</p>
                         <ul class="text-xl text-gray-700 space-y-4 mb-10 flex-grow">
-                            <li><span class="text-green-500 font-bold mr-2">✔️</span> **Prioritized product display** in
-                                AI Builder
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> **AI Priority Product
+                                Integration**</li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> **AI Push Notifications** to
+                                suitable users
                             </li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> **AI Try-on Feature** integration
+                                for product
+                                display</li>
                             <li><span class="text-green-500 font-bold mr-2">✔️</span> Professional store page & listing
                             </li>
+                            <li><span class="text-green-500 font-bold mr-2">✔️</span> API Integration (P5)</li>
                             <li><span class="text-green-500 font-bold mr-2">✔️</span> Data reporting & sales analysis
                             </li>
-                            <li><span class="text-green-500 font-bold mr-2">✔️</span> API Integration (P5)</li>
-                            <li><span class="text-green-500 font-bold mr-2">✔️</span> Dedicated support & marketing
-                                partnership</li>
                         </ul>
                         <button
                             class="w-full bg-[#a05195] hover:bg-[#665191] text-white font-bold py-4 px-6 rounded-xl text-xl transition duration-300">Become
