@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -14,11 +14,9 @@
         body {
             font-family: 'Nunito', sans-serif;
             background-color: #f0fdfa;
-            /* Màu nền trùng với Dashboard */
             margin: 0;
             padding: 0;
             overflow: hidden;
-            /* Chặn scroll của body chính */
             height: 100vh;
             width: 100vw;
         }
@@ -96,7 +94,7 @@
             }
         }
 
-        /* Utility: Hide Scrollbar but keep functionality */
+        /* Utility: Hide Scrollbar */
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -114,11 +112,9 @@
             left: 0;
             right: 0;
             bottom: 80px;
-            /* Chừa chỗ cho Bottom Nav */
             overflow-y: auto;
             background: linear-gradient(180deg, #f0fdfa 0%, #ffffff 100%);
             padding-top: env(safe-area-inset-top);
-            /* Cho iPhone tai thỏ */
             padding-bottom: 20px;
         }
 
@@ -142,7 +138,6 @@
         /* Fullscreen Camera Mode override */
         #screen-scan.screen {
             bottom: 0;
-            /* Che luôn nav bar */
             background: black;
             z-index: 50;
         }
@@ -160,11 +155,9 @@
             display: flex;
             justify-content: space-around;
             align-items: flex-start;
-            /* Align items top slightly */
             padding-top: 15px;
             z-index: 40;
             padding-bottom: env(safe-area-inset-bottom);
-            /* Cho iPhone */
         }
 
         .nav-item {
@@ -186,17 +179,41 @@
             left: 50%;
             transform: translateX(-50%);
         }
+
+        /* Success Notification Animation */
+        #order-notification {
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transform: translateY(-150%);
+        }
+
+        #order-notification.show {
+            transform: translateY(20px);
+        }
     </style>
 </head>
 
 <body>
 
+    <div id="order-notification"
+        class="fixed top-0 left-0 right-0 z-[100] flex justify-center px-4 pointer-events-none">
+        <div
+            class="bg-white rounded-2xl shadow-2xl border-l-4 border-green-500 p-4 flex items-center gap-4 w-full max-w-sm pointer-events-auto">
+            <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-gray-800">Order Successful!</h4>
+                <p class="text-xs text-gray-500">Your medicine is on the way (Est: 2h)</p>
+            </div>
+        </div>
+    </div>
+
     <div id="screen-dashboard" class="screen active hide-scrollbar">
         <div class="px-6 mt-4 pt-4">
             <div class="flex justify-between items-center mb-6">
                 <div>
-                    <p class="text-gray-500 text-sm">Chào buổi sáng,</p>
-                    <h1 class="text-2xl font-bold text-[#003f5c]">Alex Nguyễn 👋</h1>
+                    <p class="text-gray-500 text-sm">Good Morning,</p>
+                    <h1 class="text-2xl font-bold text-[#003f5c]">Alex Nguyen 👋</h1>
                 </div>
                 <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden border-2 border-white shadow-md">
                     <img src="https://i.pravatar.cc/150?img=12" alt="Avatar" class="w-full h-full object-cover">
@@ -204,7 +221,7 @@
             </div>
 
             <div class="glass-card rounded-3xl p-6 relative overflow-hidden mb-6 text-center">
-                <h2 class="text-[#003f5c] font-bold text-lg mb-4">Sức Khỏe Bể "Amazon"</h2>
+                <h2 class="text-[#003f5c] font-bold text-lg mb-4">"Amazon" Tank Health</h2>
 
                 <div class="flex justify-center mb-4">
                     <div class="liquid-container">
@@ -218,7 +235,7 @@
 
                 <p
                     class="text-[#009688] font-bold bg-teal-50 inline-block px-4 py-1 rounded-full text-sm border border-teal-100">
-                    ✨ Trạng thái: Ổn định
+                    ✨ Status: Stable
                 </p>
             </div>
 
@@ -227,7 +244,7 @@
                     <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center mb-2">
                         <i class="fa-solid fa-temperature-half"></i>
                     </div>
-                    <span class="text-gray-500 text-xs">Nhiệt độ</span>
+                    <span class="text-gray-500 text-xs">Temp</span>
                     <span class="text-[#003f5c] font-bold text-lg">28°C</span>
                 </div>
                 <div
@@ -256,8 +273,8 @@
                         🩺
                     </div>
                     <div class="text-left">
-                        <p class="font-bold text-lg">Bác Sĩ AI</p>
-                        <p class="text-blue-100 text-sm">Quét bệnh & Chẩn đoán ngay</p>
+                        <p class="font-bold text-lg">AI Doctor</p>
+                        <p class="text-blue-100 text-sm">Scan & Diagnose Now</p>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-right group-hover:translate-x-1 transition-transform"></i>
@@ -294,14 +311,15 @@
                 <div class="laser-line"></div>
                 <p
                     class="absolute bottom-2 w-full text-center text-white text-xs font-bold drop-shadow-md bg-black/20 py-1">
-                    Giữ camera ổn định...
+                    Keep camera stable...
                 </p>
             </div>
 
             <div class="flex justify-center items-center gap-8 mb-8">
                 <button
-                    class="text-white text-xl w-12 h-12 rounded-full bg-black/20 flex items-center justify-center backdrop-blur"><i
-                        class="fa-solid fa-bolt"></i></button>
+                    class="text-white text-xl w-12 h-12 rounded-full bg-black/20 flex items-center justify-center backdrop-blur">
+                    <i class="fa-solid fa-bolt"></i>
+                </button>
 
                 <button onclick="simulateScan()"
                     class="w-20 h-20 rounded-full border-4 border-white bg-white/10 flex items-center justify-center relative">
@@ -310,8 +328,9 @@
                 </button>
 
                 <button
-                    class="text-white text-xl w-12 h-12 rounded-full bg-black/20 flex items-center justify-center backdrop-blur"><i
-                        class="fa-solid fa-image"></i></button>
+                    class="text-white text-xl w-12 h-12 rounded-full bg-black/20 flex items-center justify-center backdrop-blur">
+                    <i class="fa-solid fa-image"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -319,9 +338,10 @@
     <div id="screen-result" class="screen hide-scrollbar">
         <div class="px-6 mt-4 pt-4">
             <div class="flex justify-between items-center mb-6">
-                <button onclick="switchScreen('screen-scan')" class="text-gray-600 p-2"><i
-                        class="fa-solid fa-xmark text-xl"></i></button>
-                <h1 class="text-lg font-bold text-[#003f5c]">Kết Quả Chẩn Đoán</h1>
+                <button onclick="switchScreen('screen-scan')" class="text-gray-600 p-2">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+                <h1 class="text-lg font-bold text-[#003f5c]">Diagnosis Result</h1>
                 <div class="w-6"></div>
             </div>
 
@@ -333,18 +353,19 @@
                 <div class="relative z-10">
                     <div class="flex items-center gap-2 mb-2">
                         <span
-                            class="bg-white/20 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider backdrop-blur-sm">Nguy
-                            Cơ Cao</span>
-                        <span class="text-sm opacity-90">Độ chính xác: 96%</span>
+                            class="bg-white/20 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
+                            High Risk
+                        </span>
+                        <span class="text-sm opacity-90">Accuracy: 96%</span>
                     </div>
-                    <h2 class="text-3xl font-black mb-1">Bệnh Đốm Trắng</h2>
+                    <h2 class="text-3xl font-black mb-1">White Spot (Ich)</h2>
                     <p class="text-orange-100 font-semibold italic opacity-90">Ichthyophthirius multifiliis</p>
                 </div>
             </div>
 
             <div class="mb-6">
                 <h3 class="text-[#003f5c] font-bold mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-images text-[#4db6ac]"></i> So sánh ảnh
+                    <i class="fa-solid fa-images text-[#4db6ac]"></i> Image Comparison
                 </h3>
                 <div class="flex gap-3 h-40">
                     <div class="flex-1 rounded-xl bg-gray-200 overflow-hidden relative shadow-md">
@@ -352,7 +373,7 @@
                             class="w-full h-full object-cover">
                         <span
                             class="absolute bottom-2 left-2 text-white text-[10px] font-bold backdrop-blur-md bg-black/40 px-2 py-1 rounded-md border border-white/20">
-                            Cá của bạn
+                            Your Fish
                         </span>
                     </div>
                     <div class="flex-1 rounded-xl bg-gray-200 overflow-hidden relative shadow-md">
@@ -360,29 +381,29 @@
                             class="w-full h-full object-cover filter grayscale contrast-125 brightness-110">
                         <span
                             class="absolute bottom-2 left-2 text-white text-[10px] font-bold backdrop-blur-md bg-red-600/80 px-2 py-1 rounded-md border border-white/20">
-                            Mẫu bệnh lý
+                            Disease Sample
                         </span>
                     </div>
                 </div>
             </div>
 
             <div class="glass-card rounded-2xl p-5 mb-8">
-                <h3 class="text-[#003f5c] font-bold mb-3">Triệu chứng phát hiện</h3>
+                <h3 class="text-[#003f5c] font-bold mb-3">Detected Symptoms</h3>
                 <ul class="space-y-3 text-sm text-gray-600">
                     <li class="flex items-start gap-3">
                         <i class="fa-solid fa-check-circle text-[#ff7c43] mt-1"></i>
-                        <span>Xuất hiện các hạt trắng nhỏ li ti trên vây và thân.</span>
+                        <span>Tiny white spots (like salt) on fins and body.</span>
                     </li>
                     <li class="flex items-start gap-3">
                         <i class="fa-solid fa-check-circle text-[#ff7c43] mt-1"></i>
-                        <span>Cá có dấu hiệu cọ mình vào vật trang trí (ngứa).</span>
+                        <span>Fish rubbing against decorations (flashing).</span>
                     </li>
                 </ul>
             </div>
 
             <button onclick="switchScreen('screen-treatment')"
                 class="w-full bg-[#003f5c] text-white font-bold rounded-xl py-4 shadow-xl hover:bg-[#002b40] active:scale-[0.98] transition flex justify-center items-center gap-2 mb-24">
-                Xem Phác Đồ Điều Trị <i class="fa-solid fa-arrow-right"></i>
+                View Treatment Plan <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
     </div>
@@ -390,9 +411,10 @@
     <div id="screen-treatment" class="screen hide-scrollbar">
         <div class="px-6 mt-4 pt-4">
             <div class="flex justify-between items-center mb-8">
-                <button onclick="switchScreen('screen-result')" class="text-gray-600 p-2"><i
-                        class="fa-solid fa-arrow-left text-xl"></i></button>
-                <h1 class="text-lg font-bold text-[#003f5c]">Lộ Trình Điều Trị</h1>
+                <button onclick="switchScreen('screen-result')" class="text-gray-600 p-2">
+                    <i class="fa-solid fa-arrow-left text-xl"></i>
+                </button>
+                <h1 class="text-lg font-bold text-[#003f5c]">Treatment Roadmap</h1>
                 <div class="w-6"></div>
             </div>
 
@@ -402,14 +424,13 @@
                     <div
                         class="absolute -left-[13px] top-0 w-6 h-6 rounded-full bg-[#4db6ac] border-4 border-white shadow-md">
                     </div>
-                    <h3 class="font-bold text-[#003f5c] text-lg">Ngày 1: Xử lý môi trường</h3>
-                    <p class="text-xs text-gray-400 mb-3 uppercase font-bold tracking-wider">Hôm nay</p>
+                    <h3 class="font-bold text-[#003f5c] text-lg">Day 1: Environment</h3>
+                    <p class="text-xs text-gray-400 mb-3 uppercase font-bold tracking-wider">Today</p>
                     <div class="glass-card p-4 rounded-xl text-gray-700 text-sm space-y-2 border border-teal-100">
-                        <p class="flex gap-2"><span class="text-green-500">✔</span> Tăng nhiệt độ bể lên
-                            <strong>29-30°C</strong>.
-                        </p>
-                        <p class="flex gap-2"><span class="text-green-500">✔</span> Thay 30% nước, hút sạch cặn đáy.</p>
-                        <p class="flex gap-2"><span class="text-green-500">✔</span> Tắt đèn bể để giảm stress cho cá.
+                        <p class="flex gap-2"><span class="text-green-500">✔</span> Raise tank temp to
+                            <strong>29-30°C</strong>.</p>
+                        <p class="flex gap-2"><span class="text-green-500">✔</span> 30% Water change, siphon gravel.</p>
+                        <p class="flex gap-2"><span class="text-green-500">✔</span> Turn off lights to reduce stress.
                         </p>
                     </div>
                 </div>
@@ -418,13 +439,13 @@
                     <div
                         class="absolute -left-[13px] top-0 w-6 h-6 rounded-full bg-[#ff7c43] border-4 border-white shadow-md animate-pulse">
                     </div>
-                    <h3 class="font-bold text-[#ff7c43] text-lg">Ngày 2: Dùng thuốc</h3>
-                    <p class="text-xs text-gray-400 mb-3 uppercase font-bold tracking-wider">Ngày mai</p>
+                    <h3 class="font-bold text-[#ff7c43] text-lg">Day 2: Medication</h3>
+                    <p class="text-xs text-gray-400 mb-3 uppercase font-bold tracking-wider">Tomorrow</p>
 
                     <div class="bg-white rounded-xl p-4 shadow-lg border border-orange-100">
                         <div class="flex items-center gap-2 mb-3 border-b pb-2 border-dashed border-gray-200">
                             <i class="fa-solid fa-user-doctor text-[#003f5c]"></i>
-                            <span class="text-xs font-bold text-[#003f5c] uppercase">Đơn thuốc đề xuất</span>
+                            <span class="text-xs font-bold text-[#003f5c] uppercase">Prescription</span>
                         </div>
                         <div class="flex gap-4 items-center">
                             <div
@@ -433,13 +454,13 @@
                             </div>
                             <div class="flex-1">
                                 <h4 class="font-bold text-gray-800">Bio-Knock 2</h4>
-                                <p class="text-xs text-gray-500">Đặc trị nấm & đốm trắng</p>
-                                <p class="text-[#ff7c43] font-bold mt-1">85.000 ₫</p>
+                                <p class="text-xs text-gray-500">Treats fungus & white spots</p>
+                                <p class="text-[#ff7c43] font-bold mt-1">$4.50</p>
                             </div>
                         </div>
-                        <button
+                        <button onclick="orderMedication()"
                             class="w-full mt-3 bg-[#ff7c43] text-white font-bold py-3 rounded-lg text-sm shadow hover:bg-[#e66b35] active:scale-[0.98] transition">
-                            Mua & Giao Hỏa Tốc 2h
+                            Buy & Express Delivery (2h)
                         </button>
                     </div>
                 </div>
@@ -447,10 +468,10 @@
                 <div class="relative pl-8 pb-8">
                     <div class="absolute -left-[13px] top-0 w-6 h-6 rounded-full bg-gray-300 border-4 border-white">
                     </div>
-                    <h3 class="font-bold text-gray-400 text-lg">Ngày 5: Phục hồi</h3>
-                    <p class="text-xs text-gray-400 mb-3 uppercase font-bold tracking-wider">Dự kiến</p>
+                    <h3 class="font-bold text-gray-400 text-lg">Day 5: Recovery</h3>
+                    <p class="text-xs text-gray-400 mb-3 uppercase font-bold tracking-wider">Expected</p>
                     <div class="bg-gray-50 p-4 rounded-xl text-gray-400 text-sm border border-gray-100">
-                        <p>Quan sát dấu hiệu các đốm trắng rụng. Bổ sung Vitamin C vào thức ăn.</p>
+                        <p>Observe white spots falling off. Supplement food with Vitamin C.</p>
                     </div>
                 </div>
 
@@ -459,12 +480,21 @@
     </div>
 
     <div class="bottom-nav rounded-t-2xl">
-        <button onclick="switchScreen('screen-dashboard')" class="nav-item active"><i
-                class="fa-solid fa-house"></i></button>
-        <button class="nav-item"><i class="fa-solid fa-cart-shopping"></i></button>
+        <button onclick="switchScreen('screen-dashboard')" class="nav-item active">
+            <i class="fa-solid fa-house"></i>
+        </button>
+        <button class="nav-item">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </button>
 
-        <div class="w-12"></div> <button class="nav-item"><i class="fa-solid fa-globe"></i></button>
-        <button class="nav-item"><i class="fa-solid fa-gear"></i></button>
+        <div class="w-12"></div>
+
+        <button class="nav-item">
+            <i class="fa-solid fa-globe"></i>
+        </button>
+        <button class="nav-item">
+            <i class="fa-solid fa-gear"></i>
+        </button>
 
         <div class="scan-btn-wrapper">
             <button onclick="switchScreen('screen-scan')"
@@ -486,7 +516,7 @@
             // Reset nav styling
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
 
-            // Basic nav highlight logic (simplified)
+            // Basic nav highlight logic
             if (screenId === 'screen-dashboard') {
                 document.querySelector('.nav-item:first-child').classList.add('active');
             }
@@ -496,21 +526,32 @@
             const scanScreen = document.getElementById('screen-scan');
             const originalContent = scanScreen.innerHTML;
 
-            // Overlay Analyzing UI
+            // Overlay Analyzing UI (Translated)
             const analyzingOverlay = document.createElement('div');
             analyzingOverlay.className = "absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-white z-50 backdrop-blur-sm";
             analyzingOverlay.innerHTML = `
                 <div class="w-16 h-16 border-4 border-[#4db6ac] border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p class="font-bold text-lg animate-pulse text-[#4db6ac]">AI Đang Phân Tích...</p>
-                <p class="text-sm text-gray-400 mt-2">Đang đối chiếu dữ liệu bệnh lý</p>
+                <p class="font-bold text-lg animate-pulse text-[#4db6ac]">AI Analyzing...</p>
+                <p class="text-sm text-gray-400 mt-2">Matching disease database</p>
             `;
             scanScreen.appendChild(analyzingOverlay);
 
             setTimeout(() => {
-                // Clean up and switch
-                scanScreen.innerHTML = originalContent; // Restore scan screen
+                scanScreen.innerHTML = originalContent;
                 switchScreen('screen-result');
             }, 2500);
+        }
+
+        function orderMedication() {
+            const notification = document.getElementById('order-notification');
+
+            // Show notification
+            notification.classList.add('show');
+
+            // Hide after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
     </script>
 </body>
