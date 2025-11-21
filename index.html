@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AquaVerse - Interactive Designer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AquaVerse - Left Sidebar Mobile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -23,19 +23,27 @@
             overflow: hidden;
             background-color: #e0e7ff;
             font-family: sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
+        canvas {
+            touch-action: none;
+        }
+
+        /* Chặn cuộn trang khi xoay 3D */
+
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
 
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
-            border-radius: 3px;
+            border-radius: 2px;
         }
 
-        .item-card:hover {
-            transform: translateY(-2px);
+        .item-card:active {
+            transform: scale(0.95);
             border-color: #40916c;
         }
 
@@ -49,141 +57,218 @@
             color: #64748b;
         }
 
-        /* Active Tool Button */
         .tool-btn.active {
             background-color: #40916c;
             color: white;
             border-color: #40916c;
+        }
+
+        /* === LOGIC SIDEBAR TRƯỢT TỪ TRÁI QUA === */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Mặc định trên mobile là ẩn sang trái (-100%) */
+        .sidebar-closed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-open {
+            transform: translateX(0);
+        }
+
+        /* Trên Desktop (md) thì luôn hiện (reset transform) */
+        @media (min-width: 768px) {
+            .sidebar-closed {
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="flex h-screen w-screen">
+    <div class="relative h-screen w-screen overflow-hidden flex">
 
-        <div class="w-80 bg-gray-50 flex flex-col shadow-2xl z-10 border-r border-gray-200 h-full flex-shrink-0">
-            <div class="p-4 border-b bg-white">
+        <button onclick="toggleSidebar()"
+            class="md:hidden absolute top-4 left-4 z-50 w-10 h-10 bg-white rounded-lg shadow-lg text-[#2d6a4f] flex items-center justify-center active:bg-gray-100">
+            <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+
+        <div id="sidebar"
+            class="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl z-40 flex flex-col border-r border-gray-200 sidebar-closed md:relative md:transform-none">
+
+            <div class="p-4 border-b bg-white flex justify-between items-center mt-12 md:mt-0">
                 <h1 class="text-xl font-bold text-[#2d6a4f] flex items-center gap-2">
                     <i class="fa-solid fa-cube"></i> Aqua Designer
                 </h1>
+                <button onclick="toggleSidebar()"
+                    class="md:hidden text-gray-400 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
             </div>
+
             <div class="flex p-2 gap-2 bg-gray-100">
                 <button onclick="switchTab('fish')" id="tab-fish"
                     class="active-tab flex-1 py-2 rounded-lg text-xs font-bold shadow-sm transition">Cá</button>
                 <button onclick="switchTab('plants')" id="tab-plants"
                     class="inactive-tab flex-1 py-2 rounded-lg text-xs font-bold shadow-sm transition">Cây</button>
                 <button onclick="switchTab('hardscape')" id="tab-hardscape"
-                    class="inactive-tab flex-1 py-2 rounded-lg text-xs font-bold shadow-sm transition">Đá/Lũa</button>
+                    class="inactive-tab flex-1 py-2 rounded-lg text-xs font-bold shadow-sm transition">Đá</button>
             </div>
+
             <div id="item-grid" class="flex-1 overflow-y-auto p-3 grid grid-cols-2 gap-3 content-start bg-[#f8fafc]">
             </div>
+
             <div class="p-4 bg-white border-t border-gray-200">
                 <button onclick="clearScene()"
-                    class="w-full py-2 bg-red-100 text-red-600 rounded-lg text-sm font-bold hover:bg-red-200 transition">
+                    class="w-full py-3 bg-red-100 text-red-600 rounded-xl text-sm font-bold hover:bg-red-200 transition active:scale-95">
                     <i class="fa-solid fa-trash-can mr-2"></i> Xóa tất cả
                 </button>
             </div>
         </div>
 
-        <div class="flex-1 relative" id="canvas-container">
+        <div class="flex-1 relative w-full h-full bg-[#e0e7ff]">
+
+            <div id="canvas-container" class="w-full h-full"></div>
 
             <div
-                class="absolute top-4 right-4 bg-white/80 backdrop-blur px-4 py-2 rounded-lg shadow text-xs text-gray-600 pointer-events-none select-none z-20">
-                <p>🖱️ <strong>Click</strong> vào vật thể để chọn</p>
-                <p>🔄 <strong>Xoay nền:</strong> Chuột trái ra ngoài</p>
+                class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-2 rounded-xl shadow-lg text-xs text-gray-600 pointer-events-none select-none z-20 border border-gray-100 text-right">
+                <p class="hidden md:block"><i class="fa-solid fa-mouse text-[#40916c]"></i> Click chọn vật thể</p>
+                <p class="md:hidden">👆 Chạm để chọn</p>
+                <p class="md:hidden">✌️ 2 ngón xoay/zoom</p>
             </div>
 
-            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white rounded-full shadow-xl p-2 flex gap-2 z-20"
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white rounded-2xl shadow-2xl p-2 flex gap-4 z-30 border border-gray-100 items-end"
                 id="transform-toolbar" style="display:none;">
-                <button onclick="setTransformMode('translate')" id="btn-translate"
-                    class="tool-btn active w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition"
-                    title="Di chuyển">
-                    <i class="fa-solid fa-arrows-up-down-left-right"></i>
-                </button>
-                <button onclick="setTransformMode('scale')" id="btn-scale"
-                    class="tool-btn w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition"
-                    title="Phóng to / Thu nhỏ">
-                    <i class="fa-solid fa-expand"></i>
-                </button>
-                <div class="w-[1px] h-10 bg-gray-200"></div>
-                <button onclick="deleteSelected()"
-                    class="w-10 h-10 rounded-full border border-red-200 text-red-500 flex items-center justify-center hover:bg-red-50 transition"
-                    title="Xóa vật thể này">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
+
+                <div class="flex flex-col items-center gap-1">
+                    <button onclick="setTransformMode('translate')" id="btn-translate"
+                        class="tool-btn active w-12 h-12 rounded-2xl border border-gray-200 flex items-center justify-center shadow-sm active:scale-90 touch-manipulation">
+                        <i class="fa-solid fa-arrows-up-down-left-right text-lg"></i>
+                    </button>
+                    <span class="text-[9px] text-gray-500 font-bold uppercase">Dời</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-1">
+                    <button onclick="setTransformMode('scale')" id="btn-scale"
+                        class="tool-btn w-12 h-12 rounded-2xl border border-gray-200 flex items-center justify-center shadow-sm active:scale-90 touch-manipulation">
+                        <i class="fa-solid fa-expand text-lg"></i>
+                    </button>
+                    <span class="text-[9px] text-gray-500 font-bold uppercase">Size</span>
+                </div>
+
+                <div class="w-[1px] h-12 bg-gray-200 mx-1"></div>
+
+                <div class="flex flex-col items-center gap-1">
+                    <button onclick="deleteSelected()"
+                        class="tool-btn w-12 h-12 rounded-2xl border border-red-100 text-red-500 flex items-center justify-center bg-red-50 shadow-sm active:scale-90 touch-manipulation">
+                        <i class="fa-solid fa-trash-can text-lg"></i>
+                    </button>
+                    <span class="text-[9px] text-red-400 font-bold uppercase">Xóa</span>
+                </div>
             </div>
 
+            <div id="overlay" onclick="toggleSidebar()"
+                class="absolute inset-0 bg-black/30 z-30 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
         </div>
     </div>
 
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-        import { TransformControls } from 'three/addons/controls/TransformControls.js'; // Import công cụ kéo thả
+        import { TransformControls } from 'three/addons/controls/TransformControls.js';
 
-        // --- DỮ LIỆU ---
+        // --- 1. DỮ LIỆU ITEM ---
         const db = {
             fish: [
-                { name: 'Betta Red', img: './img/87c4fe2aa6611262bf263158b7eb84f4-removebg-preview (1).png', scale: 0.5 },
+                { name: 'Betta', img: './img/87c4fe2aa6611262bf263158b7eb84f4-removebg-preview (1).png', scale: 0.5 },
                 { name: 'Goldfish', img: 'https://cdn-icons-png.flaticon.com/512/2970/2970078.png', scale: 0.6 },
-                { name: 'Neon Tetra', img: 'https://cdn-icons-png.flaticon.com/512/10216/10216626.png', scale: 0.3 },
-                { name: 'Koi Fish', img: 'https://cdn-icons-png.flaticon.com/512/616/616566.png', scale: 0.8 },
+                { name: 'Neon', img: 'https://cdn-icons-png.flaticon.com/512/10216/10216626.png', scale: 0.3 },
+                { name: 'Koi', img: 'https://cdn-icons-png.flaticon.com/512/616/616566.png', scale: 0.8 },
             ],
             plants: [
-                { name: 'Ráy Nana', img: './img/S7735585ed90048c5921ad8ad9614142b9-removebg-preview (1).png', scale: 0.8 },
+                { name: 'Ráy', img: './img/S7735585ed90048c5921ad8ad9614142b9-removebg-preview (1).png', scale: 0.8 },
                 { name: 'Dương Xỉ', img: 'https://cdn-icons-png.flaticon.com/512/2293/2293878.png', scale: 0.9 },
-                { name: 'Rong Đuôi Chó', img: 'https://cdn-icons-png.flaticon.com/512/15043/15043277.png', scale: 1.0 },
+                { name: 'Rong', img: 'https://cdn-icons-png.flaticon.com/512/15043/15043277.png', scale: 1.0 },
             ],
             hardscape: [
-                { name: 'Đá Cuội', img: './img/536634efa35a8402e407da024efd445b-removebg-preview (1).png', scale: 0.6 },
-                { name: 'Lũa Bonsai', img: 'https://cdn-icons-png.flaticon.com/512/12481/12481228.png', scale: 1.2 },
+                { name: 'Đá', img: './img/536634efa35a8402e407da024efd445b-removebg-preview (1).png', scale: 0.6 },
+                { name: 'Lũa', img: 'https://cdn-icons-png.flaticon.com/512/12481/12481228.png', scale: 1.2 },
                 { name: 'Lâu đài', img: 'https://cdn-icons-png.flaticon.com/512/2203/2203956.png', scale: 1.5 },
             ]
         };
 
-        // --- UI LOGIC ---
+        // --- 2. LOGIC SIDEBAR TRÁI ---
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            if (sidebar.classList.contains('sidebar-closed')) {
+                // Mở menu
+                sidebar.classList.remove('sidebar-closed');
+                sidebar.classList.add('sidebar-open');
+                overlay.classList.remove('hidden');
+            } else {
+                // Đóng menu
+                sidebar.classList.add('sidebar-closed');
+                sidebar.classList.remove('sidebar-open');
+                overlay.classList.add('hidden');
+            }
+        };
+
+        // --- 3. RENDER ITEMS ---
         const grid = document.getElementById('item-grid');
         let currentCategory = 'fish';
         let itemsInScene = [];
 
         window.switchTab = (category) => {
             currentCategory = category;
+            renderGrid();
             ['fish', 'plants', 'hardscape'].forEach(c => {
                 const btn = document.getElementById(`tab-${c}`);
                 btn.className = (c === category) ? 'active-tab flex-1 py-2 rounded-lg text-xs font-bold shadow-sm transition' : 'inactive-tab flex-1 py-2 rounded-lg text-xs font-bold shadow-sm transition';
             });
-            renderGrid();
         };
 
         function renderGrid() {
             grid.innerHTML = '';
             db[currentCategory].forEach(item => {
                 const div = document.createElement('div');
-                div.className = 'item-card bg-white p-3 rounded-xl border border-gray-200 cursor-pointer flex flex-col items-center transition shadow-sm';
-                div.innerHTML = `<div class="h-14 w-full flex items-center justify-center mb-2"><img src="${item.img}" class="max-h-full object-contain"></div><span class="text-xs font-semibold text-gray-700">${item.name}</span>`;
-                div.onclick = () => addItemToScene(item, currentCategory);
+                div.className = 'item-card bg-white p-2 rounded-xl border border-gray-200 cursor-pointer flex flex-col items-center transition shadow-sm active:bg-gray-50';
+                div.innerHTML = `<div class="h-12 w-full flex items-center justify-center mb-1"><img src="${item.img}" class="max-h-full object-contain pointer-events-none"></div><span class="text-[10px] font-semibold text-gray-700">${item.name}</span>`;
+
+                div.onclick = (e) => {
+                    e.stopPropagation();
+                    addItemToScene(item, currentCategory);
+                    // Nếu đang ở mobile (<768px), chọn xong thì đóng menu để xem kết quả
+                    if (window.innerWidth < 768) window.toggleSidebar();
+                };
                 grid.appendChild(div);
             });
         }
         renderGrid();
 
-        // --- THREE.JS SETUP ---
+        // --- 4. THREE.JS SCENE SETUP ---
+        const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xe0e7ff);
         scene.fog = new THREE.Fog(0xe0e7ff, 5, 30);
 
-        const camera = new THREE.PerspectiveCamera(45, (window.innerWidth - 320) / window.innerHeight, 0.1, 1000);
-        camera.position.set(5, 3, 8);
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(5, 4, 8);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth - 320, window.innerHeight);
+        renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.shadowMap.enabled = true;
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        renderer.setPixelRatio(window.devicePixelRatio); // Nét hơn trên mobile
+        container.appendChild(renderer.domElement);
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.maxPolarAngle = Math.PI / 2 - 0.1;
+        controls.dampingFactor = 0.05;
+        controls.maxPolarAngle = Math.PI / 2 - 0.05;
+        controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
 
         // Lights
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
@@ -196,89 +281,74 @@
         // Tank
         const tankGroup = new THREE.Group();
         scene.add(tankGroup);
-        // Glass
         const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xaaccff, metalness: 0.1, roughness: 0, transmission: 0.6, transparent: true, side: THREE.BackSide });
         const tank = new THREE.Mesh(new THREE.BoxGeometry(6, 3, 3), glassMat);
         tank.position.y = 1.5;
         tankGroup.add(tank);
-        // Sand
         const sand = new THREE.Mesh(new THREE.PlaneGeometry(5.8, 2.8), new THREE.MeshStandardMaterial({ color: 0x2f2f2f }));
         sand.rotation.x = -Math.PI / 2;
         sand.position.y = 0.02;
         sand.receiveShadow = true;
         tankGroup.add(sand);
 
-        // --- TRANSFORM CONTROLS (LOGIC KÉO THẢ) ---
+        // --- 5. TRANSFORM CONTROLS (Kéo thả) ---
         const transformControl = new TransformControls(camera, renderer.domElement);
-        transformControl.setTranslationSnap(0.1); // Kéo giật cục nhẹ cho dễ căn
+        transformControl.setTranslationSnap(0.1);
+        transformControl.setSize(2.0); // Nút kéo to hơn cho dễ bấm trên mobile
         scene.add(transformControl);
 
-        // Khi đang kéo vật thể thì tắt xoay camera (để tránh xoay loạn)
         transformControl.addEventListener('dragging-changed', function (event) {
             controls.enabled = !event.value;
-
-            // Nếu đang kéo vật thể, đánh dấu nó là "đang bị giữ" để dừng animation bơi
             if (transformControl.object) {
                 transformControl.object.userData.isDragging = event.value;
             }
         });
 
-        // --- RAYCASTER (LOGIC CHỌN VẬT THỂ) ---
+        // --- 6. RAYCASTER (Chọn vật thể) ---
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
 
-        // Sự kiện click chuột
-        window.addEventListener('pointerdown', (event) => {
-            // Tính toán vị trí chuột trong canvas
-            const canvasBounds = renderer.domElement.getBoundingClientRect();
-            mouse.x = ((event.clientX - canvasBounds.left) / canvasBounds.width) * 2 - 1;
-            mouse.y = -((event.clientY - canvasBounds.top) / canvasBounds.height) * 2 + 1;
+        renderer.domElement.addEventListener('pointerdown', (event) => {
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
             raycaster.setFromCamera(mouse, camera);
             const intersects = raycaster.intersectObjects(itemsInScene);
 
             if (intersects.length > 0) {
-                // Chọn vật thể đầu tiên tia chiếu trúng
                 const selectedObject = intersects[0].object;
-
-                // Gắn công cụ điều khiển vào vật thể đó
                 transformControl.attach(selectedObject);
-
-                // Hiện thanh công cụ bên dưới
                 document.getElementById('transform-toolbar').style.display = 'flex';
             } else {
-                // Nếu click ra ngoài nền -> Bỏ chọn
-                transformControl.detach();
-                document.getElementById('transform-toolbar').style.display = 'none';
+                if (!transformControl.dragging) {
+                    transformControl.detach();
+                    document.getElementById('transform-toolbar').style.display = 'none';
+                }
             }
         });
 
-        // Các hàm điều khiển từ nút HTML
+        // Interface Functions
         window.setTransformMode = (mode) => {
-            transformControl.setMode(mode); // 'translate' (di chuyển) hoặc 'scale' (co giãn)
-
-            // Update UI nút bấm
-            document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+            transformControl.setMode(mode);
+            document.getElementById('btn-translate').classList.remove('active');
+            document.getElementById('btn-scale').classList.remove('active');
             document.getElementById(`btn-${mode}`).classList.add('active');
         }
 
         window.deleteSelected = () => {
             if (transformControl.object) {
                 const obj = transformControl.object;
-                transformControl.detach(); // Gỡ công cụ
-                scene.remove(obj); // Xóa khỏi scene
-
-                // Xóa khỏi mảng quản lý
+                transformControl.detach();
+                scene.remove(obj);
                 const index = itemsInScene.indexOf(obj);
                 if (index > -1) itemsInScene.splice(index, 1);
-
                 document.getElementById('transform-toolbar').style.display = 'none';
             }
         }
 
-        // --- ITEM ADDING LOGIC ---
+        // --- 7. ADD & ANIMATE ---
         const textureLoader = new THREE.TextureLoader();
-
         window.addItemToScene = (itemData, type) => {
             textureLoader.load(itemData.img, (texture) => {
                 const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide, alphaTest: 0.5 });
@@ -300,8 +370,6 @@
                 mesh.castShadow = true;
                 scene.add(mesh);
                 itemsInScene.push(mesh);
-
-                // Tự động chọn vật thể mới thêm vào
                 transformControl.attach(mesh);
                 document.getElementById('transform-toolbar').style.display = 'flex';
             });
@@ -312,48 +380,37 @@
             itemsInScene = [];
             transformControl.detach();
             document.getElementById('transform-toolbar').style.display = 'none';
+            if (window.innerWidth < 768) window.toggleSidebar();
         }
 
-        // --- ANIMATION LOOP ---
         const clock = new THREE.Clock();
-
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
-
             const time = clock.getElapsedTime();
 
             itemsInScene.forEach(mesh => {
-                // Nếu vật thể đang bị kéo (isDragging) thì KHÔNG chạy animation bơi
                 if (!mesh.userData.isDragging) {
-
-                    // Logic Cá bơi
                     if (mesh.userData.isFish) {
                         mesh.position.x += mesh.userData.speed * mesh.userData.direction;
-                        // Cập nhật baseY liên tục để khi kéo thả xong nó bơi tiếp ở độ cao mới
                         if (!transformControl.object || transformControl.object !== mesh) {
                             mesh.position.y = (mesh.position.y * 0.95) + ((mesh.userData.baseY + Math.sin(time * 2 + mesh.id) * 0.1) * 0.05);
                         }
-
-                        // Quay đầu
                         if (mesh.position.x > 2.8 || mesh.position.x < -2.8) {
                             mesh.userData.direction *= -1;
-                            mesh.scale.x *= -1; // Lật ảnh
+                            mesh.scale.x *= -1;
                         }
                         mesh.lookAt(camera.position);
                     }
-
-                    // Logic Cây/Đá Billboard
                     if (mesh.userData.isStatic) {
                         const target = camera.position.clone();
                         target.y = mesh.position.y;
                         mesh.lookAt(target);
                     }
                 } else {
-                    // Nếu đang kéo thả, cập nhật lại baseY mới cho cá để khi thả ra nó bơi ở chỗ mới
                     if (mesh.userData.isFish) {
                         mesh.userData.baseY = mesh.position.y;
-                        mesh.lookAt(camera.position); // Vẫn luôn hướng về camera khi kéo
+                        mesh.lookAt(camera.position);
                     }
                     if (mesh.userData.isStatic) {
                         const target = camera.position.clone();
@@ -362,17 +419,16 @@
                     }
                 }
             });
-
             renderer.render(scene, camera);
         }
 
-        // Resize Handler
         window.addEventListener('resize', () => {
-            camera.aspect = (window.innerWidth - 320) / window.innerHeight;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera.aspect = width / height;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth - 320, window.innerHeight);
+            renderer.setSize(width, height);
         });
-
         animate();
     </script>
 </body>
