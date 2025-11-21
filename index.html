@@ -1,558 +1,379 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Aquarium AI Care</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaVerse - Interactive Designer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
 
     <style>
         body {
-            font-family: 'Nunito', sans-serif;
-            background-color: #f0fdfa;
             margin: 0;
-            padding: 0;
             overflow: hidden;
-            height: 100vh;
-            width: 100vw;
+            background-color: #e0e7ff;
+            font-family: sans-serif;
         }
 
-        /* Glassmorphism Card Utility */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 30px rgba(0, 63, 92, 0.05);
+        ::-webkit-scrollbar {
+            width: 6px;
         }
 
-        /* Liquid Animation */
-        .liquid-container {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            background: #e0f7fa;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 4px solid white;
-            box-shadow: 0 0 20px rgba(77, 182, 172, 0.3);
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
         }
 
-        .liquid {
-            position: absolute;
-            top: 15%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, #4db6ac, #009688);
-            border-radius: 40%;
-            animation: wave 6s infinite linear;
+        .item-card:hover {
+            transform: translateY(-2px);
+            border-color: #40916c;
         }
 
-        @keyframes wave {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+        .active-tab {
+            background-color: #40916c;
+            color: white;
         }
 
-        /* Scanner Laser */
-        .laser-line {
-            position: absolute;
-            width: 100%;
-            height: 4px;
-            background: #4db6ac;
-            box-shadow: 0 0 15px #4db6ac, 0 0 30px #4db6ac;
-            animation: scan 2s infinite linear;
-            z-index: 20;
+        .inactive-tab {
+            background-color: white;
+            color: #64748b;
         }
 
-        @keyframes scan {
-            0% {
-                top: 0;
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            90% {
-                opacity: 1;
-            }
-
-            100% {
-                top: 100%;
-                opacity: 0;
-            }
-        }
-
-        /* Utility: Hide Scrollbar */
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* Screen Logic */
-        .screen {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 80px;
-            overflow-y: auto;
-            background: linear-gradient(180deg, #f0fdfa 0%, #ffffff 100%);
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: 20px;
-        }
-
-        .screen.active {
-            display: block;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(5px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Fullscreen Camera Mode override */
-        #screen-scan.screen {
-            bottom: 0;
-            background: black;
-            z-index: 50;
-        }
-
-        /* Bottom Nav Fixed */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-start;
-            padding-top: 15px;
-            z-index: 40;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .nav-item {
-            color: #94a3b8;
-            font-size: 24px;
-            transition: 0.3s;
-            padding: 0 10px;
-        }
-
-        .nav-item.active {
-            color: #003f5c;
-            transform: translateY(-5px);
-        }
-
-        /* Floating Scan Button */
-        .scan-btn-wrapper {
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        /* Success Notification Animation */
-        #order-notification {
-            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            transform: translateY(-150%);
-        }
-
-        #order-notification.show {
-            transform: translateY(20px);
+        /* Active Tool Button */
+        .tool-btn.active {
+            background-color: #40916c;
+            color: white;
+            border-color: #40916c;
         }
     </style>
 </head>
 
 <body>
 
-    <div id="order-notification"
-        class="fixed top-0 left-0 right-0 z-[100] flex justify-center px-4 pointer-events-none">
-        <div
-            class="bg-white rounded-2xl shadow-2xl border-l-4 border-green-500 p-4 flex items-center gap-4 w-full max-w-sm pointer-events-auto">
-            <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xl">
-                <i class="fa-solid fa-check"></i>
+    <div class="flex h-screen w-screen">
+
+        <div class="w-80 bg-gray-50 flex flex-col shadow-2xl z-10 border-r border-gray-200 h-full flex-shrink-0">
+            <div class="p-4 border-b bg-white">
+                <h1 class="text-xl font-bold text-[#2d6a4f] flex items-center gap-2">
+                    <i class="fa-solid fa-cube"></i> Aqua Designer
+                </h1>
             </div>
-            <div>
-                <h4 class="font-bold text-gray-800">Order Successful!</h4>
-                <p class="text-xs text-gray-500">Your medicine is on the way (Est: 2h)</p>
+            <div class="flex p-2 gap-2 bg-gray-100">
+                <button onclick="switchTab('fish')" id="tab-fish"
+                    class="active-tab flex-1 py-2 rounded-lg text-xs font-bold shadow-sm transition">Cá</button>
+                <button onclick="switchTab('plants')" id="tab-plants"
+                    class="inactive-tab flex-1 py-2 rounded-lg text-xs font-bold shadow-sm transition">Cây</button>
+                <button onclick="switchTab('hardscape')" id="tab-hardscape"
+                    class="inactive-tab flex-1 py-2 rounded-lg text-xs font-bold shadow-sm transition">Đá/Lũa</button>
             </div>
-        </div>
-    </div>
-
-    <div id="screen-dashboard" class="screen active hide-scrollbar">
-        <div class="px-6 mt-4 pt-4">
-            <div class="flex justify-between items-center mb-6">
-                <div>
-                    <p class="text-gray-500 text-sm">Good Morning,</p>
-                    <h1 class="text-2xl font-bold text-[#003f5c]">Alex Nguyen 👋</h1>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden border-2 border-white shadow-md">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="Avatar" class="w-full h-full object-cover">
-                </div>
+            <div id="item-grid" class="flex-1 overflow-y-auto p-3 grid grid-cols-2 gap-3 content-start bg-[#f8fafc]">
             </div>
-
-            <div class="glass-card rounded-3xl p-6 relative overflow-hidden mb-6 text-center">
-                <h2 class="text-[#003f5c] font-bold text-lg mb-4">"Amazon" Tank Health</h2>
-
-                <div class="flex justify-center mb-4">
-                    <div class="liquid-container">
-                        <div class="liquid"></div>
-                        <div class="absolute inset-0 flex items-center justify-center z-10">
-                            <span class="text-4xl font-black text-white drop-shadow-md">85</span>
-                            <span class="text-white text-sm mt-3 ml-1 font-bold">%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <p
-                    class="text-[#009688] font-bold bg-teal-50 inline-block px-4 py-1 rounded-full text-sm border border-teal-100">
-                    ✨ Status: Stable
-                </p>
-            </div>
-
-            <div class="grid grid-cols-3 gap-3 mb-6">
-                <div class="glass-card rounded-2xl p-3 flex flex-col items-center shadow-sm">
-                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center mb-2">
-                        <i class="fa-solid fa-temperature-half"></i>
-                    </div>
-                    <span class="text-gray-500 text-xs">Temp</span>
-                    <span class="text-[#003f5c] font-bold text-lg">28°C</span>
-                </div>
-                <div
-                    class="glass-card rounded-2xl p-3 flex flex-col items-center shadow-sm border-l-4 border-l-yellow-400">
-                    <div
-                        class="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mb-2">
-                        <i class="fa-solid fa-droplet"></i>
-                    </div>
-                    <span class="text-gray-500 text-xs">pH</span>
-                    <span class="text-[#003f5c] font-bold text-lg">6.5</span>
-                </div>
-                <div class="glass-card rounded-2xl p-3 flex flex-col items-center shadow-sm">
-                    <div class="w-8 h-8 rounded-full bg-green-100 text-green-500 flex items-center justify-center mb-2">
-                        <i class="fa-solid fa-flask"></i>
-                    </div>
-                    <span class="text-gray-500 text-xs">NO3</span>
-                    <span class="text-[#003f5c] font-bold text-lg">0mg</span>
-                </div>
-            </div>
-
-            <button onclick="switchScreen('screen-scan')"
-                class="w-full bg-gradient-to-r from-[#003f5c] to-[#005b96] text-white rounded-2xl p-5 shadow-lg shadow-blue-900/20 active:scale-[0.98] transition-all flex items-center justify-between group mb-20">
-                <div class="flex items-center gap-4">
-                    <div
-                        class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl animate-pulse">
-                        🩺
-                    </div>
-                    <div class="text-left">
-                        <p class="font-bold text-lg">AI Doctor</p>
-                        <p class="text-blue-100 text-sm">Scan & Diagnose Now</p>
-                    </div>
-                </div>
-                <i class="fa-solid fa-chevron-right group-hover:translate-x-1 transition-transform"></i>
-            </button>
-        </div>
-    </div>
-
-    <div id="screen-scan" class="screen hide-scrollbar">
-        <img src="https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            class="absolute inset-0 w-full h-full object-cover opacity-80" alt="Fish Camera">
-
-        <div class="absolute inset-0 z-10 flex flex-col justify-between p-6 pt-10 pb-10 safe-top safe-bottom">
-            <div class="flex justify-between items-center text-white mt-4">
-                <button onclick="switchScreen('screen-dashboard')"
-                    class="w-10 h-10 rounded-full bg-black/40 backdrop-blur flex items-center justify-center active:bg-black/60">
-                    <i class="fa-solid fa-arrow-left"></i>
+            <div class="p-4 bg-white border-t border-gray-200">
+                <button onclick="clearScene()"
+                    class="w-full py-2 bg-red-100 text-red-600 rounded-lg text-sm font-bold hover:bg-red-200 transition">
+                    <i class="fa-solid fa-trash-can mr-2"></i> Xóa tất cả
                 </button>
-                <span
-                    class="font-semibold bg-black/40 px-3 py-1 rounded-full text-sm backdrop-blur border border-white/10">
-                    🤖 AI Vision Active
-                </span>
-                <div class="w-10 h-10"></div>
             </div>
+        </div>
+
+        <div class="flex-1 relative" id="canvas-container">
 
             <div
-                class="relative w-72 h-72 mx-auto border-2 border-white/30 rounded-3xl overflow-hidden backdrop-blur-[2px] shadow-2xl">
-                <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-[#4db6ac] rounded-tl-xl"></div>
-                <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-[#4db6ac] rounded-tr-xl"></div>
-                <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-[#4db6ac] rounded-bl-xl">
-                </div>
-                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-[#4db6ac] rounded-br-xl">
-                </div>
-
-                <div class="laser-line"></div>
-                <p
-                    class="absolute bottom-2 w-full text-center text-white text-xs font-bold drop-shadow-md bg-black/20 py-1">
-                    Keep camera stable...
-                </p>
+                class="absolute top-4 right-4 bg-white/80 backdrop-blur px-4 py-2 rounded-lg shadow text-xs text-gray-600 pointer-events-none select-none z-20">
+                <p>🖱️ <strong>Click</strong> vào vật thể để chọn</p>
+                <p>🔄 <strong>Xoay nền:</strong> Chuột trái ra ngoài</p>
             </div>
 
-            <div class="flex justify-center items-center gap-8 mb-8">
-                <button
-                    class="text-white text-xl w-12 h-12 rounded-full bg-black/20 flex items-center justify-center backdrop-blur">
-                    <i class="fa-solid fa-bolt"></i>
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white rounded-full shadow-xl p-2 flex gap-2 z-20"
+                id="transform-toolbar" style="display:none;">
+                <button onclick="setTransformMode('translate')" id="btn-translate"
+                    class="tool-btn active w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition"
+                    title="Di chuyển">
+                    <i class="fa-solid fa-arrows-up-down-left-right"></i>
                 </button>
-
-                <button onclick="simulateScan()"
-                    class="w-20 h-20 rounded-full border-4 border-white bg-white/10 flex items-center justify-center relative">
-                    <div class="w-16 h-16 rounded-full bg-white transition-transform hover:scale-95 active:scale-75">
-                    </div>
+                <button onclick="setTransformMode('scale')" id="btn-scale"
+                    class="tool-btn w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition"
+                    title="Phóng to / Thu nhỏ">
+                    <i class="fa-solid fa-expand"></i>
                 </button>
-
-                <button
-                    class="text-white text-xl w-12 h-12 rounded-full bg-black/20 flex items-center justify-center backdrop-blur">
-                    <i class="fa-solid fa-image"></i>
+                <div class="w-[1px] h-10 bg-gray-200"></div>
+                <button onclick="deleteSelected()"
+                    class="w-10 h-10 rounded-full border border-red-200 text-red-500 flex items-center justify-center hover:bg-red-50 transition"
+                    title="Xóa vật thể này">
+                    <i class="fa-solid fa-trash"></i>
                 </button>
             </div>
+
         </div>
     </div>
 
-    <div id="screen-result" class="screen hide-scrollbar">
-        <div class="px-6 mt-4 pt-4">
-            <div class="flex justify-between items-center mb-6">
-                <button onclick="switchScreen('screen-scan')" class="text-gray-600 p-2">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-                <h1 class="text-lg font-bold text-[#003f5c]">Diagnosis Result</h1>
-                <div class="w-6"></div>
-            </div>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { TransformControls } from 'three/addons/controls/TransformControls.js'; // Import công cụ kéo thả
 
-            <div
-                class="bg-gradient-to-br from-[#ff7c43] to-[#f55a42] text-white rounded-2xl p-6 mb-6 shadow-lg shadow-orange-200 relative overflow-hidden">
-                <div class="absolute -right-4 -top-4 text-white opacity-20 text-8xl rotate-12">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-                <div class="relative z-10">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span
-                            class="bg-white/20 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
-                            High Risk
-                        </span>
-                        <span class="text-sm opacity-90">Accuracy: 96%</span>
-                    </div>
-                    <h2 class="text-3xl font-black mb-1">White Spot (Ich)</h2>
-                    <p class="text-orange-100 font-semibold italic opacity-90">Ichthyophthirius multifiliis</p>
-                </div>
-            </div>
+        // --- DỮ LIỆU ---
+        const db = {
+            fish: [
+                { name: 'Betta Red', img: 'https://cdn-icons-png.flaticon.com/512/3094/3094936.png', scale: 0.5 },
+                { name: 'Goldfish', img: 'https://cdn-icons-png.flaticon.com/512/2970/2970078.png', scale: 0.6 },
+                { name: 'Neon Tetra', img: 'https://cdn-icons-png.flaticon.com/512/10216/10216626.png', scale: 0.3 },
+                { name: 'Koi Fish', img: 'https://cdn-icons-png.flaticon.com/512/616/616566.png', scale: 0.8 },
+            ],
+            plants: [
+                { name: 'Ráy Nana', img: 'https://cdn-icons-png.flaticon.com/512/6768/6768548.png', scale: 0.8 },
+                { name: 'Dương Xỉ', img: 'https://cdn-icons-png.flaticon.com/512/2293/2293878.png', scale: 0.9 },
+                { name: 'Rong Đuôi Chó', img: 'https://cdn-icons-png.flaticon.com/512/15043/15043277.png', scale: 1.0 },
+            ],
+            hardscape: [
+                { name: 'Đá Cuội', img: 'https://cdn-icons-png.flaticon.com/512/9249/9249660.png', scale: 0.6 },
+                { name: 'Lũa Bonsai', img: 'https://cdn-icons-png.flaticon.com/512/12481/12481228.png', scale: 1.2 },
+                { name: 'Lâu đài', img: 'https://cdn-icons-png.flaticon.com/512/2203/2203956.png', scale: 1.5 },
+            ]
+        };
 
-            <div class="mb-6">
-                <h3 class="text-[#003f5c] font-bold mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-images text-[#4db6ac]"></i> Image Comparison
-                </h3>
-                <div class="flex gap-3 h-40">
-                    <div class="flex-1 rounded-xl bg-gray-200 overflow-hidden relative shadow-md">
-                        <img src="https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=300&q=80"
-                            class="w-full h-full object-cover">
-                        <span
-                            class="absolute bottom-2 left-2 text-white text-[10px] font-bold backdrop-blur-md bg-black/40 px-2 py-1 rounded-md border border-white/20">
-                            Your Fish
-                        </span>
-                    </div>
-                    <div class="flex-1 rounded-xl bg-gray-200 overflow-hidden relative shadow-md">
-                        <img src="https://images.unsplash.com/photo-1524704654690-b56c05c78a00?auto=format&fit=crop&w=400&q=80"
-                            class="w-full h-full object-cover filter grayscale contrast-125 brightness-110">
-                        <span
-                            class="absolute bottom-2 left-2 text-white text-[10px] font-bold backdrop-blur-md bg-red-600/80 px-2 py-1 rounded-md border border-white/20">
-                            Disease Sample
-                        </span>
-                    </div>
-                </div>
-            </div>
+        // --- UI LOGIC ---
+        const grid = document.getElementById('item-grid');
+        let currentCategory = 'fish';
+        let itemsInScene = [];
 
-            <div class="glass-card rounded-2xl p-5 mb-8">
-                <h3 class="text-[#003f5c] font-bold mb-3">Detected Symptoms</h3>
-                <ul class="space-y-3 text-sm text-gray-600">
-                    <li class="flex items-start gap-3">
-                        <i class="fa-solid fa-check-circle text-[#ff7c43] mt-1"></i>
-                        <span>Tiny white spots (like salt) on fins and body.</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <i class="fa-solid fa-check-circle text-[#ff7c43] mt-1"></i>
-                        <span>Fish rubbing against decorations (flashing).</span>
-                    </li>
-                </ul>
-            </div>
-
-            <button onclick="switchScreen('screen-treatment')"
-                class="w-full bg-[#003f5c] text-white font-bold rounded-xl py-4 shadow-xl hover:bg-[#002b40] active:scale-[0.98] transition flex justify-center items-center gap-2 mb-24">
-                View Treatment Plan <i class="fa-solid fa-arrow-right"></i>
-            </button>
-        </div>
-    </div>
-
-    <div id="screen-treatment" class="screen hide-scrollbar">
-        <div class="px-6 mt-4 pt-4">
-            <div class="flex justify-between items-center mb-8">
-                <button onclick="switchScreen('screen-result')" class="text-gray-600 p-2">
-                    <i class="fa-solid fa-arrow-left text-xl"></i>
-                </button>
-                <h1 class="text-lg font-bold text-[#003f5c]">Treatment Roadmap</h1>
-                <div class="w-6"></div>
-            </div>
-
-            <div class="relative border-l-4 border-gray-200 ml-4 space-y-10 mb-24">
-
-                <div class="relative pl-8">
-                    <div
-                        class="absolute -left-[13px] top-0 w-6 h-6 rounded-full bg-[#4db6ac] border-4 border-white shadow-md">
-                    </div>
-                    <h3 class="font-bold text-[#003f5c] text-lg">Day 1: Environment</h3>
-                    <p class="text-xs text-gray-400 mb-3 uppercase font-bold tracking-wider">Today</p>
-                    <div class="glass-card p-4 rounded-xl text-gray-700 text-sm space-y-2 border border-teal-100">
-                        <p class="flex gap-2"><span class="text-green-500">✔</span> Raise tank temp to
-                            <strong>29-30°C</strong>.</p>
-                        <p class="flex gap-2"><span class="text-green-500">✔</span> 30% Water change, siphon gravel.</p>
-                        <p class="flex gap-2"><span class="text-green-500">✔</span> Turn off lights to reduce stress.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="relative pl-8">
-                    <div
-                        class="absolute -left-[13px] top-0 w-6 h-6 rounded-full bg-[#ff7c43] border-4 border-white shadow-md animate-pulse">
-                    </div>
-                    <h3 class="font-bold text-[#ff7c43] text-lg">Day 2: Medication</h3>
-                    <p class="text-xs text-gray-400 mb-3 uppercase font-bold tracking-wider">Tomorrow</p>
-
-                    <div class="bg-white rounded-xl p-4 shadow-lg border border-orange-100">
-                        <div class="flex items-center gap-2 mb-3 border-b pb-2 border-dashed border-gray-200">
-                            <i class="fa-solid fa-user-doctor text-[#003f5c]"></i>
-                            <span class="text-xs font-bold text-[#003f5c] uppercase">Prescription</span>
-                        </div>
-                        <div class="flex gap-4 items-center">
-                            <div
-                                class="w-16 h-16 bg-orange-50 rounded-lg flex items-center justify-center text-2xl border border-orange-100">
-                                💊
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-gray-800">Bio-Knock 2</h4>
-                                <p class="text-xs text-gray-500">Treats fungus & white spots</p>
-                                <p class="text-[#ff7c43] font-bold mt-1">$4.50</p>
-                            </div>
-                        </div>
-                        <button onclick="orderMedication()"
-                            class="w-full mt-3 bg-[#ff7c43] text-white font-bold py-3 rounded-lg text-sm shadow hover:bg-[#e66b35] active:scale-[0.98] transition">
-                            Buy & Express Delivery (2h)
-                        </button>
-                    </div>
-                </div>
-
-                <div class="relative pl-8 pb-8">
-                    <div class="absolute -left-[13px] top-0 w-6 h-6 rounded-full bg-gray-300 border-4 border-white">
-                    </div>
-                    <h3 class="font-bold text-gray-400 text-lg">Day 5: Recovery</h3>
-                    <p class="text-xs text-gray-400 mb-3 uppercase font-bold tracking-wider">Expected</p>
-                    <div class="bg-gray-50 p-4 rounded-xl text-gray-400 text-sm border border-gray-100">
-                        <p>Observe white spots falling off. Supplement food with Vitamin C.</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="bottom-nav rounded-t-2xl">
-        <button onclick="switchScreen('screen-dashboard')" class="nav-item active">
-            <i class="fa-solid fa-house"></i>
-        </button>
-        <button class="nav-item">
-            <i class="fa-solid fa-cart-shopping"></i>
-        </button>
-
-        <div class="w-12"></div>
-
-        <button class="nav-item">
-            <i class="fa-solid fa-globe"></i>
-        </button>
-        <button class="nav-item">
-            <i class="fa-solid fa-gear"></i>
-        </button>
-
-        <div class="scan-btn-wrapper">
-            <button onclick="switchScreen('screen-scan')"
-                class="w-16 h-16 bg-[#003f5c] rounded-full text-white text-2xl shadow-[0_4px_15px_rgba(0,63,92,0.4)] flex items-center justify-center border-4 border-[#f0fdfa] active:scale-95 transition-transform">
-                <i class="fa-solid fa-camera"></i>
-            </button>
-        </div>
-    </div>
-
-    <script>
-        function switchScreen(screenId) {
-            // Hide all screens
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
+        window.switchTab = (category) => {
+            currentCategory = category;
+            ['fish', 'plants', 'hardscape'].forEach(c => {
+                const btn = document.getElementById(`tab-${c}`);
+                btn.className = (c === category) ? 'active-tab flex-1 py-2 rounded-lg text-xs font-bold shadow-sm transition' : 'inactive-tab flex-1 py-2 rounded-lg text-xs font-bold shadow-sm transition';
             });
-            // Show selected screen
-            document.getElementById(screenId).classList.add('active');
+            renderGrid();
+        };
 
-            // Reset nav styling
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        function renderGrid() {
+            grid.innerHTML = '';
+            db[currentCategory].forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'item-card bg-white p-3 rounded-xl border border-gray-200 cursor-pointer flex flex-col items-center transition shadow-sm';
+                div.innerHTML = `<div class="h-14 w-full flex items-center justify-center mb-2"><img src="${item.img}" class="max-h-full object-contain"></div><span class="text-xs font-semibold text-gray-700">${item.name}</span>`;
+                div.onclick = () => addItemToScene(item, currentCategory);
+                grid.appendChild(div);
+            });
+        }
+        renderGrid();
 
-            // Basic nav highlight logic
-            if (screenId === 'screen-dashboard') {
-                document.querySelector('.nav-item:first-child').classList.add('active');
+        // --- THREE.JS SETUP ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xe0e7ff);
+        scene.fog = new THREE.Fog(0xe0e7ff, 5, 30);
+
+        const camera = new THREE.PerspectiveCamera(45, (window.innerWidth - 320) / window.innerHeight, 0.1, 1000);
+        camera.position.set(5, 3, 8);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth - 320, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.maxPolarAngle = Math.PI / 2 - 0.1;
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(5, 10, 5);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        // Tank
+        const tankGroup = new THREE.Group();
+        scene.add(tankGroup);
+        // Glass
+        const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xaaccff, metalness: 0.1, roughness: 0, transmission: 0.6, transparent: true, side: THREE.BackSide });
+        const tank = new THREE.Mesh(new THREE.BoxGeometry(6, 3, 3), glassMat);
+        tank.position.y = 1.5;
+        tankGroup.add(tank);
+        // Sand
+        const sand = new THREE.Mesh(new THREE.PlaneGeometry(5.8, 2.8), new THREE.MeshStandardMaterial({ color: 0x2f2f2f }));
+        sand.rotation.x = -Math.PI / 2;
+        sand.position.y = 0.02;
+        sand.receiveShadow = true;
+        tankGroup.add(sand);
+
+        // --- TRANSFORM CONTROLS (LOGIC KÉO THẢ) ---
+        const transformControl = new TransformControls(camera, renderer.domElement);
+        transformControl.setTranslationSnap(0.1); // Kéo giật cục nhẹ cho dễ căn
+        scene.add(transformControl);
+
+        // Khi đang kéo vật thể thì tắt xoay camera (để tránh xoay loạn)
+        transformControl.addEventListener('dragging-changed', function (event) {
+            controls.enabled = !event.value;
+
+            // Nếu đang kéo vật thể, đánh dấu nó là "đang bị giữ" để dừng animation bơi
+            if (transformControl.object) {
+                transformControl.object.userData.isDragging = event.value;
+            }
+        });
+
+        // --- RAYCASTER (LOGIC CHỌN VẬT THỂ) ---
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        // Sự kiện click chuột
+        window.addEventListener('pointerdown', (event) => {
+            // Tính toán vị trí chuột trong canvas
+            const canvasBounds = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - canvasBounds.left) / canvasBounds.width) * 2 - 1;
+            mouse.y = -((event.clientY - canvasBounds.top) / canvasBounds.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(itemsInScene);
+
+            if (intersects.length > 0) {
+                // Chọn vật thể đầu tiên tia chiếu trúng
+                const selectedObject = intersects[0].object;
+
+                // Gắn công cụ điều khiển vào vật thể đó
+                transformControl.attach(selectedObject);
+
+                // Hiện thanh công cụ bên dưới
+                document.getElementById('transform-toolbar').style.display = 'flex';
+            } else {
+                // Nếu click ra ngoài nền -> Bỏ chọn
+                transformControl.detach();
+                document.getElementById('transform-toolbar').style.display = 'none';
+            }
+        });
+
+        // Các hàm điều khiển từ nút HTML
+        window.setTransformMode = (mode) => {
+            transformControl.setMode(mode); // 'translate' (di chuyển) hoặc 'scale' (co giãn)
+
+            // Update UI nút bấm
+            document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${mode}`).classList.add('active');
+        }
+
+        window.deleteSelected = () => {
+            if (transformControl.object) {
+                const obj = transformControl.object;
+                transformControl.detach(); // Gỡ công cụ
+                scene.remove(obj); // Xóa khỏi scene
+
+                // Xóa khỏi mảng quản lý
+                const index = itemsInScene.indexOf(obj);
+                if (index > -1) itemsInScene.splice(index, 1);
+
+                document.getElementById('transform-toolbar').style.display = 'none';
             }
         }
 
-        function simulateScan() {
-            const scanScreen = document.getElementById('screen-scan');
-            const originalContent = scanScreen.innerHTML;
+        // --- ITEM ADDING LOGIC ---
+        const textureLoader = new THREE.TextureLoader();
 
-            // Overlay Analyzing UI (Translated)
-            const analyzingOverlay = document.createElement('div');
-            analyzingOverlay.className = "absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-white z-50 backdrop-blur-sm";
-            analyzingOverlay.innerHTML = `
-                <div class="w-16 h-16 border-4 border-[#4db6ac] border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p class="font-bold text-lg animate-pulse text-[#4db6ac]">AI Analyzing...</p>
-                <p class="text-sm text-gray-400 mt-2">Matching disease database</p>
-            `;
-            scanScreen.appendChild(analyzingOverlay);
+        window.addItemToScene = (itemData, type) => {
+            textureLoader.load(itemData.img, (texture) => {
+                const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide, alphaTest: 0.5 });
+                const geometry = new THREE.PlaneGeometry(itemData.scale, itemData.scale);
+                const mesh = new THREE.Mesh(geometry, material);
 
-            setTimeout(() => {
-                scanScreen.innerHTML = originalContent;
-                switchScreen('screen-result');
-            }, 2500);
+                const x = (Math.random() - 0.5) * 4;
+                const z = (Math.random() - 0.5) * 2;
+
+                if (type === 'fish') {
+                    mesh.position.set(x, Math.random() * 1.5 + 0.5, z);
+                    mesh.userData = { isFish: true, speed: (Math.random() * 0.02) + 0.005, direction: Math.random() > 0.5 ? 1 : -1, baseY: mesh.position.y };
+                    if (mesh.userData.direction === -1) mesh.scale.x = -1;
+                } else {
+                    mesh.position.set(x, itemData.scale / 2, z);
+                    mesh.userData = { isStatic: true };
+                }
+
+                mesh.castShadow = true;
+                scene.add(mesh);
+                itemsInScene.push(mesh);
+
+                // Tự động chọn vật thể mới thêm vào
+                transformControl.attach(mesh);
+                document.getElementById('transform-toolbar').style.display = 'flex';
+            });
+        };
+
+        window.clearScene = () => {
+            itemsInScene.forEach(m => scene.remove(m));
+            itemsInScene = [];
+            transformControl.detach();
+            document.getElementById('transform-toolbar').style.display = 'none';
         }
 
-        function orderMedication() {
-            const notification = document.getElementById('order-notification');
+        // --- ANIMATION LOOP ---
+        const clock = new THREE.Clock();
 
-            // Show notification
-            notification.classList.add('show');
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
 
-            // Hide after 3 seconds
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
+            const time = clock.getElapsedTime();
+
+            itemsInScene.forEach(mesh => {
+                // Nếu vật thể đang bị kéo (isDragging) thì KHÔNG chạy animation bơi
+                if (!mesh.userData.isDragging) {
+
+                    // Logic Cá bơi
+                    if (mesh.userData.isFish) {
+                        mesh.position.x += mesh.userData.speed * mesh.userData.direction;
+                        // Cập nhật baseY liên tục để khi kéo thả xong nó bơi tiếp ở độ cao mới
+                        if (!transformControl.object || transformControl.object !== mesh) {
+                            mesh.position.y = (mesh.position.y * 0.95) + ((mesh.userData.baseY + Math.sin(time * 2 + mesh.id) * 0.1) * 0.05);
+                        }
+
+                        // Quay đầu
+                        if (mesh.position.x > 2.8 || mesh.position.x < -2.8) {
+                            mesh.userData.direction *= -1;
+                            mesh.scale.x *= -1; // Lật ảnh
+                        }
+                        mesh.lookAt(camera.position);
+                    }
+
+                    // Logic Cây/Đá Billboard
+                    if (mesh.userData.isStatic) {
+                        const target = camera.position.clone();
+                        target.y = mesh.position.y;
+                        mesh.lookAt(target);
+                    }
+                } else {
+                    // Nếu đang kéo thả, cập nhật lại baseY mới cho cá để khi thả ra nó bơi ở chỗ mới
+                    if (mesh.userData.isFish) {
+                        mesh.userData.baseY = mesh.position.y;
+                        mesh.lookAt(camera.position); // Vẫn luôn hướng về camera khi kéo
+                    }
+                    if (mesh.userData.isStatic) {
+                        const target = camera.position.clone();
+                        target.y = mesh.position.y;
+                        mesh.lookAt(target);
+                    }
+                }
+            });
+
+            renderer.render(scene, camera);
         }
+
+        // Resize Handler
+        window.addEventListener('resize', () => {
+            camera.aspect = (window.innerWidth - 320) / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth - 320, window.innerHeight);
+        });
+
+        animate();
     </script>
 </body>
 
